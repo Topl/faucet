@@ -7,9 +7,6 @@ import 'package:vrouter/vrouter.dart';
 
 void main() {
   runApp(
-    // For widgets to be able to read providers, we need to wrap the entire
-    // application in a "ProviderScope" widget.
-    // This is where the state of our providers will be stored.
     const ProviderScope(
       child: FaucetRouter(),
     ),
@@ -25,7 +22,7 @@ class FaucetRouter extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return VRouter(
       debugShowCheckedModeBanner: false,
-      title: 'Annulus Event Explorer',
+      title: 'Faucet',
       initialUrl: HomeScreen.route,
       theme: lightTheme(context: context),
       darkTheme: darkTheme(context: context),
