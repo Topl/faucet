@@ -27,7 +27,12 @@ class FaucetRouter extends HookConsumerWidget {
       theme: lightTheme(context: context),
       darkTheme: darkTheme(context: context),
       themeMode: ref.watch(appThemeColorProvider),
-      routes: [],
+      routes: [
+        VWidget(
+          path: HomeScreen.route,
+          widget: const HomeScreen(),
+        ),
+      ],
     );
   }
 }
