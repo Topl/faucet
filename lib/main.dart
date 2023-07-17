@@ -1,14 +1,23 @@
 import 'package:faucet/home/screens/home_screen.dart';
+import 'package:faucet/shared/constants/ui.dart';
 import 'package:faucet/shared/providers/app_theme_provider.dart';
 import 'package:faucet/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vrouter/vrouter.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 void main() {
   runApp(
-    const ProviderScope(
-      child: FaucetRouter(),
+    ProviderScope(
+      child: ResponsiveBreakpoints.builder(
+        child: const FaucetRouter(),
+        breakpoints: const [
+          Breakpoint(start: 0, end: mobileBreak, name: MOBILE),
+          Breakpoint(start: mobileBreak + 1, end: tabletBreak, name: TABLET),
+          Breakpoint(start: tabletBreak + 1, end: double.infinity, name: DESKTOP),
+        ],
+      ),
     ),
   );
 }
@@ -30,7 +39,9 @@ class FaucetRouter extends HookConsumerWidget {
       routes: [
         VWidget(
           path: HomeScreen.route,
-          widget: const HomeScreen(),
+          widget: HomeScreen(
+            colorTheme: ref.watch(appThemeColorProvider),
+          ),
         ),
       ],
     );
