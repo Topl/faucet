@@ -1,13 +1,11 @@
+import 'package:faucet/shared/theme.dart';
+import 'package:faucet/shared/utils/theme_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
-
-import '../../shared/theme.dart';
-import '../../shared/utils/theme_color.dart';
 
 List<String> networks = [
   'Valhalla',
@@ -202,7 +200,6 @@ class _GetTestTokensState extends State<GetTestTokens> {
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
-    final isTablet = ResponsiveBreakpoints.of(context).equals(TABLET);
 
     return Container(
       decoration: BoxDecoration(color: getSelectedColor(widget.colorTheme, 0xFFFFFFFF, 0xFF282A2C)),
