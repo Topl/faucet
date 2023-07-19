@@ -1,4 +1,3 @@
-import 'package:faucet/blocks/utils/utils.dart';
 import 'package:faucet/transactions/models/transaction.dart';
 import 'package:faucet/transactions/models/transaction_status.dart';
 import 'package:faucet/transactions/models/transaction_type.dart';
@@ -21,3 +20,5 @@ Transaction getMockTransaction() {
     name: '1',
   );
 }
+
+getMockBlock() {}
