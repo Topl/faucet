@@ -21,3 +21,5 @@ Transaction getMockTransaction() {
     name: '1',
   );
 }
+
+getMockBlock() {}
