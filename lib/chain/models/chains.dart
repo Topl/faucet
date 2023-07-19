@@ -16,8 +16,8 @@ enum Chains {
   ),
   dev_network(
     name: 'Development',
-    host: 'testnet.topl.co',
-    port: 443,
+    host: 'tetra.dev.torus.topl.tech',
+    port: 9091,
   ),
   mock(
     name: 'Mock',

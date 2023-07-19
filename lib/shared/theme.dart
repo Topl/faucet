@@ -104,6 +104,13 @@ TextTheme _textTheme({
           color: textColor,
           fontFamily: "Rational Display",
         ),
+        headlineMedium: const TextStyle(
+          color: Color(0xFF0DC8D4),
+          fontWeight: FontWeight.w600,
+          fontSize: 19,
+          fontFamily: 'Rational Display',
+          fontStyle: FontStyle.normal,
+        ),
 
         /// Title
         titleLarge: TextStyle(
@@ -132,6 +139,12 @@ TextTheme _textTheme({
           color: altTextColor,
           fontFamily: "Rational Display",
         ),
+        labelSmall: TextStyle(
+          fontSize: 12.0,
+          fontWeight: FontWeight.w500,
+          color: textColor,
+          fontFamily: "Rational Display",
+        ),
 
         /// Body
         bodyMedium: TextStyle(
@@ -155,6 +168,11 @@ TextStyle? headlineLarge(BuildContext context) {
   return Theme.of(context).textTheme.headlineLarge;
 }
 
+/// Returns [Theme.of(context).textTheme.headlineMedium]
+TextStyle? headlineMedium(BuildContext context) {
+  return Theme.of(context).textTheme.headlineMedium;
+}
+
 /// Returns [Theme.of(context).textTheme.titleLarge]
 TextStyle? titleLarge(BuildContext context) {
   return Theme.of(context).textTheme.titleLarge;
@@ -173,6 +191,11 @@ TextStyle? titleSmall(BuildContext context) {
 /// Returns [Theme.of(context).textTheme.labelLarge]
 TextStyle? labelLarge(BuildContext context) {
   return Theme.of(context).textTheme.labelLarge;
+}
+
+/// Returns [Theme.of(context).textTheme.labelSmall]
+TextStyle? labelSmall(BuildContext context) {
+  return Theme.of(context).textTheme.labelSmall;
 }
 
 /// Returns [Theme.of(context).textTheme.bodyMedium]
