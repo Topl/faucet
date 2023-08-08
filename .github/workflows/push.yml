@@ -14,7 +14,7 @@ on:
     branches:
       - main
       - dev
-
+      - fix-push-workflow
 jobs:
   build:
     uses: ./.github/workflows/_build.yml 
