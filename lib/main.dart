@@ -3,11 +3,15 @@ import 'package:faucet/shared/constants/ui.dart';
 import 'package:faucet/shared/providers/app_theme_provider.dart';
 import 'package:faucet/shared/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vrouter/vrouter.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+
   runApp(
     ProviderScope(
       child: ResponsiveBreakpoints.builder(
