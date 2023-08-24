@@ -221,16 +221,13 @@ class _GetTestTokensState extends State<GetTestTokens> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: const Color.fromRGBO(112, 64, 236, 0.04),
-                border: Border.all(
-                  color: getSelectedColor(widget.colorTheme, 0xFFE0E0E0, 0xFF858E8E),
-                ),
               ),
               child: Row(
                 children: [
                   const SizedBox(width: 16),
                   Icon(
                     Icons.warning_amber,
-                    color: getSelectedColor(widget.colorTheme, 0xFF7040EC, 0xFF858E8E),
+                    color: getSelectedColor(widget.colorTheme, 0xFF7040EC, 0xFF7040EC),
                     size: 24,
                   ),
                   const SizedBox(width: 16),
@@ -243,7 +240,7 @@ class _GetTestTokensState extends State<GetTestTokens> {
                           fontSize: 14,
                           fontFamily: 'Rational Display',
                           fontWeight: FontWeight.w300,
-                          color: getSelectedColor(widget.colorTheme, 0xFF7040EC, 0xFF858E8E),
+                          color: getSelectedColor(widget.colorTheme, 0xFF7040EC, 0xFF7040EC),
                         ),
                       ),
                     ),
