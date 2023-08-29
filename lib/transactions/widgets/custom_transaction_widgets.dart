@@ -348,8 +348,6 @@ class CustomColumnWithText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

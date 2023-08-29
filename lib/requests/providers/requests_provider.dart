@@ -1,4 +1,5 @@
 import 'package:faucet/requests/models/request.dart';
+import 'package:faucet/requests/providers/rate_limit_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:faucet/requests/utils/get_mock_requests.dart';
@@ -79,6 +80,14 @@ class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
   ///
   /// It returns a [Future<Request>]
   Future<Request> makeRequest(Request requestToMake) async {
+    // Check if rate limit is reached
+    final remainingRateLimitTime = ref.read(remainingRateLimitTimeProvider);
+    if (remainingRateLimitTime != null) {
+      throw Exception(
+        'Rate limit reached. Please wait a ${remainingRateLimitTime.inSeconds} seconds and try again.',
+      );
+    }
+
     final requests = state.asData?.value;
     if (requests == null) {
       throw Exception('Error in requestProvider: requests are null');
@@ -89,6 +98,9 @@ class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
     var submittedRequest = requestToMake.copyWith(transactionId: '28EhwUBiHJ3evyGidV1WH8QMfrLF6N8UDze9Yw7jqi6w');
     requests.add(submittedRequest);
     state = AsyncData([...requests]);
+
+    ref.read(rateLimitProvider.notifier).setRateLimit();
+
     return submittedRequest;
   }
 }
