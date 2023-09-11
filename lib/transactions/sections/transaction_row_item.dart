@@ -125,9 +125,9 @@ class RowDataSource extends DataTableSource {
     if (index < data.length) {
       return DataRow(color: MaterialStateProperty.all(clr), cells: <DataCell>[
         DataCell(GestureDetector(
-          child: TransactionColumnText(
+          child: const TransactionColumnText(
             isTransactionTable: true,
-            textTop: '${row.transactionId} ${Strings.feeAcronym}',
+            textTop: '50 ${Strings.feeAcronym}',
             textBottom: "",
           ),
         )),

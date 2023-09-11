@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:faucet/shared/constants/strings.dart';
 import 'package:faucet/shared/providers/app_theme_provider.dart';
 import 'package:faucet/shared/theme.dart';
+import 'package:faucet/shared/widgets/copy_to_clipboard.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
@@ -309,25 +310,21 @@ class CustomRowWithText extends StatelessWidget {
         const SizedBox(
           width: 24,
         ),
-        Row(
-          children: [
-            CustomTextRight(desc: rightText),
-            Padding(
-                padding: !isMobile ? const EdgeInsets.only(top: 0, bottom: 0, left: 10, right: 0) : EdgeInsets.zero,
-                child: hasIcon
-                    ? GestureDetector(
-                        onTap: () {
-                          Clipboard.setData(ClipboardData(text: rightText));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Copied to Clipboard'),
-                            ),
-                          );
-                        },
-                        child: const Icon(Icons.copy))
-                    : null),
-          ],
-        ),
+        Expanded(child: CustomTextRight(desc: rightText)),
+        Padding(
+            padding: !isMobile ? const EdgeInsets.only(top: 0, bottom: 0, left: 10, right: 0) : EdgeInsets.zero,
+            child: hasIcon
+                ? GestureDetector(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: rightText));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(Strings.copyToClipboard),
+                        ),
+                      );
+                    },
+                    child: const Icon(Icons.copy))
+                : null),
       ],
     );
   }
@@ -348,6 +345,8 @@ class CustomColumnWithText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -363,7 +362,17 @@ class CustomColumnWithText extends StatelessWidget {
         ),
         Row(
           children: [
-            CustomTextRight(desc: rightText),
+            Expanded(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10), // Adjust the vertical padding as needed
+                  child: CustomTextRight(desc: rightText),
+                ),
+              ),
+            ),
+            Padding(
+                padding: isMobile ? const EdgeInsets.only(top: 0, bottom: 0, left: 10, right: 0) : EdgeInsets.zero,
+                child: hasIcon ? CopyToClipboard(rightText: rightText) : null),
           ],
         ),
       ],
@@ -389,4 +398,126 @@ class CustomPadding extends StatelessWidget {
       child: child,
     );
   }
+}
+
+class CustomToast extends StatelessWidget {
+  const CustomToast({
+    Key? key,
+    required this.colorTheme,
+    required this.cancel,
+    required this.isSuccess,
+  }) : super(key: key);
+
+  final ThemeMode colorTheme;
+  final VoidCallback cancel;
+  final bool isSuccess;
+
+  @override
+  Widget build(BuildContext context) {
+    final isTablet = ResponsiveBreakpoints.of(context).between(TABLET, DESKTOP);
+    final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
+
+    return generateContainer(
+      colorTheme: colorTheme,
+      context: context,
+      isTablet: isTablet,
+      isMobile: isMobile,
+      isSuccess: isSuccess,
+      cancel: cancel,
+      message: "Network was added ${isMobile ? '\n' : ""}successfully",
+    );
+  }
+}
+
+class RemoveNetworkToast extends StatelessWidget {
+  const RemoveNetworkToast({
+    Key? key,
+    required this.colorTheme,
+    required this.cancel,
+    required this.isSuccess,
+  }) : super(key: key);
+
+  final ThemeMode colorTheme;
+  final VoidCallback cancel;
+  final bool isSuccess;
+
+  @override
+  Widget build(BuildContext context) {
+    final isTablet = ResponsiveBreakpoints.of(context).between(TABLET, DESKTOP);
+    final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
+
+    return generateContainer(
+      colorTheme: colorTheme,
+      context: context,
+      isTablet: isTablet,
+      isMobile: isMobile,
+      isSuccess: isSuccess,
+      cancel: cancel,
+      message: "Network was removed ${isMobile ? '\n' : ""}successfully",
+    );
+  }
+}
+
+Container generateContainer({
+  required ThemeMode colorTheme,
+  required BuildContext context,
+  required bool isTablet,
+  required bool isMobile,
+  required bool isSuccess,
+  required Function() cancel,
+  required String message,
+}) {
+  return Container(
+    height: 64,
+    width: isTablet ? 500 : 345,
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
+      border: Border.all(
+        color: getSelectedColor(colorTheme, 0xFFE0E0E0, 0xFF858E8E),
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        const SizedBox(width: 16),
+        isSuccess
+            ? const Icon(
+                Icons.check,
+                color: Colors.green,
+                size: 24,
+              )
+            : const Icon(
+                Icons.warning_amber,
+                color: Colors.red,
+                size: 24,
+              ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: SizedBox(
+            width: 450,
+            child: Text(
+              isSuccess ? message : "Something went wrong... ${isMobile ? '\n' : ""}Please try again later",
+              style: bodyMedium(context),
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: cancel,
+        ),
+      ],
+    ),
+  );
 }
