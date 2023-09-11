@@ -9,6 +9,11 @@ class Strings {
   static const String multipleChainEmbedding = 'Multiple-chain Embedding';
   static const String noBlocksLoaded = 'No blocks loaded';
   static const String blockDetails = 'Block Details';
+  static const String tableHeaderType = 'TYPE';
+  static const String tableHeaderBlock = 'BLOCK';
+  static const String tableHeaderTxnHashId = 'TXN HASH/ID';
+  static const String tableHeaderSummary = 'SUMMARY';
+  static const String tableHeaderFee = 'FEE';
   static const String epoch = 'Epoch';
   static const String header = 'Header';
   static const String utc = 'UTC';
@@ -118,6 +123,7 @@ class Strings {
       'Some network providers may monitor your network activity. Please add only trusted networks.';
   static const String toplMainet = 'Topl Mainnet';
   static const String networkName = 'Network Name';
+  static const String network = 'Network';
   static const String rpcUrl = 'New RPC URL';
   static const String requiredField = 'This field is required';
   static const String chainId = 'Chain ID';
@@ -134,4 +140,9 @@ class Strings {
   static const String standardSideSheet = 'Show Standard Side Sheet';
   static const String summary = 'Summary';
   static const String transactions = 'Transactions';
+  static const String removeCustomNetwork = 'Remove custom network';
+  static const String addNew = 'Add New';
+  static const String noResultsFound = 'No results found';
+  static const String copyToClipboard = 'Copied to Clipboard';
+  static const String selectANetwork = 'Select a Network';
 }

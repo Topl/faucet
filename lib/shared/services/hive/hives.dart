@@ -1,11 +1,19 @@
-enum HiveBox {
+enum Hives {
+  customChains(
+    id: 'customChains',
+  );
+
+  const Hives({required this.id});
+
+  final String id;
+}
+
+enum HivesBox {
   rateLimit(
     id: 'rateLimit',
   );
 
-  const HiveBox({
-    required this.id,
-  });
+  const HivesBox({required this.id});
 
   final String id;
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import '../../chain/sections/chainname_dropdown.dart';
@@ -47,13 +46,6 @@ class Header extends HookConsumerWidget {
                       Text('by Topl', style: labelSmall(context)),
                     ]),
               ),
-              //logo
-              // SvgPicture.asset(
-              //   logoAsset,
-              //   width: 48.0,
-              //   height: 48.0,
-              // ),
-              //Search bar
               isMobile
                   ? const SizedBox()
                   : SizedBox(

@@ -1,11 +1,18 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:faucet/chain/models/chains.dart';
 import 'package:faucet/chain/providers/selected_chain_provider.dart';
+import 'package:faucet/chain/sections/add_new_network.dart';
+import 'package:faucet/shared/constants/strings.dart';
+import 'package:faucet/shared/constants/ui.dart';
 import 'package:faucet/shared/theme.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
+import 'package:faucet/transactions/utils/utils.dart';
+import 'package:faucet/transactions/widgets/custom_transaction_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:modal_side_sheet/modal_side_sheet.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class ChainNameDropDown extends HookConsumerWidget {
@@ -18,35 +25,48 @@ class ChainNameDropDown extends HookConsumerWidget {
     this.onItemSelected,
   }) : super(key: key);
 
-  final List<Chains> chains = Chains.values;
-
   final isDropDownOpen = useState(false);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Chains selectedChain = ref.watch(selectedChainProvider);
     final isResponsive = ResponsiveBreakpoints.of(context).smallerThan(DESKTOP);
+    final AsyncValue<List<Chains>> allChains = ref.watch(chainsProvider);
 
-    return isResponsive
-        ? _ResponsiveDropDown(
-            onItemSelected: onItemSelected,
-            chains: chains,
-            selectedChain: selectedChain,
-            colorTheme: colorTheme,
-            setSelectedChain: (Chains chain) {
-              ref.read(selectedChainProvider.notifier).state = chain;
-            },
-            isDropDownOpen: isDropDownOpen,
-          )
-        : _DesktopDropdown(
-            chains: chains,
-            selectedChain: selectedChain,
-            colorTheme: colorTheme,
-            setSelectedChain: (Chains chain) {
-              ref.read(selectedChainProvider.notifier).state = chain;
-            },
-            isDropDownOpen: isDropDownOpen,
-          );
+    return allChains.when(
+      data: (List<Chains> chains) {
+        return isResponsive
+            ? _ResponsiveDropDown(
+                onItemSelected: onItemSelected,
+                chains: chains,
+                selectedChain: selectedChain,
+                colorTheme: colorTheme,
+                setSelectedChain: (Chains chain) {
+                  ref.read(selectedChainProvider.notifier).state = chain;
+                },
+                removeCustomChain: (String chainId) async {
+                  await ref.read(chainsProvider.notifier).removeCustomChain(chainId: chainId);
+                },
+                isDropDownOpen: isDropDownOpen,
+              )
+            : _DesktopDropdown(
+                chains: chains,
+                selectedChain: selectedChain,
+                colorTheme: colorTheme,
+                setSelectedChain: (Chains chain) {
+                  ref.read(selectedChainProvider.notifier).state = chain;
+                },
+                removeCustomChain: (String chainId) async {
+                  await ref.read(chainsProvider.notifier).removeCustomChain(chainId: chainId);
+                },
+                isDropDownOpen: isDropDownOpen,
+              );
+      },
+      error: (error, stack) => const Text('Oops, something unexpected happened'),
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }
 
@@ -55,6 +75,7 @@ class _ResponsiveDropDown extends StatelessWidget {
   final Chains selectedChain;
   final ThemeMode colorTheme;
   final Function(Chains) setSelectedChain;
+  final Function(String) removeCustomChain;
   final ValueNotifier<bool> isDropDownOpen;
   final void Function()? onItemSelected;
 
@@ -63,6 +84,7 @@ class _ResponsiveDropDown extends StatelessWidget {
     required this.selectedChain,
     required this.colorTheme,
     required this.setSelectedChain,
+    required this.removeCustomChain,
     required this.isDropDownOpen,
     required this.onItemSelected,
     Key? key,
@@ -73,7 +95,7 @@ class _ResponsiveDropDown extends StatelessWidget {
     return Row(
       children: [
         Text(
-          "Network",
+          Strings.network,
           style: bodyMedium(context),
         ),
         const Spacer(),
@@ -89,7 +111,7 @@ class _ResponsiveDropDown extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              chain.name,
+                              shortenNetwork(chain),
                               style: bodyMedium(context),
                             ),
                           ),
@@ -99,17 +121,77 @@ class _ResponsiveDropDown extends StatelessWidget {
                               color: Color(0xFF7040EC),
                               size: 24,
                             ),
+                          if (chain is CustomNetwork)
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              tooltip: Strings.removeCustomNetwork,
+                              iconSize: 24,
+                              onPressed: () async {
+                                await removeCustomChain(chain.chainId);
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                } else {
+                                  return;
+                                }
+                              },
+                            )
                         ],
                       ),
                     ))
                 .toList(),
+            DropdownMenuItem(
+              value: Strings.addNew,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: getSelectedColor(
+                        colorTheme,
+                        0xFF535757,
+                        0xFF858E8E,
+                      ),
+                      width: 0.2,
+                    ),
+                  ),
+                ),
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      showModalSideSheet(
+                          context: context,
+                          ignoreAppBar: true,
+                          width: 640,
+                          barrierColor: Colors.white.withOpacity(barrierOpacity),
+                          // with blur,
+                          barrierDismissible: true,
+                          body: AddNewNetworkContainer(
+                            colorTheme: colorTheme,
+                          ));
+
+                      onItemSelected?.call();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.add, color: Color(0xFF535757), size: 20),
+                          const SizedBox(width: 4),
+                          Text(
+                            Strings.addNew,
+                            style: bodyMedium(context),
+                          ),
+                        ],
+                      ),
+                    )),
+              ),
+            )
           ],
           value: selectedChain,
           selectedItemBuilder: (context) => chains
               .map((Chains chain) => Row(
                     children: [
                       CustomItem(
-                        name: chain.name,
+                        name: chain.networkName,
                       ),
                     ],
                   ))
@@ -171,19 +253,23 @@ class _DesktopDropdown extends StatelessWidget {
   final Chains selectedChain;
   final ThemeMode colorTheme;
   final Function(Chains) setSelectedChain;
+  final Function(String) removeCustomChain;
   final ValueNotifier<bool> isDropDownOpen;
+  static final FToast toast = FToast();
 
   const _DesktopDropdown({
     required this.chains,
     required this.selectedChain,
     required this.colorTheme,
     required this.setSelectedChain,
+    required this.removeCustomChain,
     required this.isDropDownOpen,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    toast.init(context);
     return Center(
       child: DropdownButtonHideUnderline(
         child: DropdownButton2(
@@ -198,15 +284,41 @@ class _DesktopDropdown extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Row(
                         children: [
-                          CustomItem(
-                            name: chain.name,
-                          ),
+                          Tooltip(
+                              message: chain.networkName.length > 8 ? chain.networkName : '',
+                              child: CustomItem(
+                                name: shortenNetwork(chain),
+                              )),
                           const Spacer(),
                           Icon(
                             Icons.check,
                             color: const Color(0xFF7040EC),
                             size: selectedChain == chain ? 24 : 0,
                           ),
+                          if (chain is CustomNetwork)
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              tooltip: Strings.removeCustomNetwork,
+                              iconSize: 24,
+                              onPressed: () async {
+                                await removeCustomChain(chain.chainId);
+                                toast.showToast(
+                                    child: RemoveNetworkToast(
+                                        colorTheme: colorTheme, isSuccess: true, cancel: () => Fluttertoast.cancel()),
+                                    toastDuration: const Duration(seconds: 4),
+                                    positionedToastBuilder: (context, child) => Positioned(
+                                          top: 30,
+                                          left: ResponsiveBreakpoints.of(context).equals(TABLET) ? 70 : 0,
+                                          right: 0,
+                                          child: child,
+                                        ));
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                } else {
+                                  return;
+                                }
+                              },
+                            ),
                         ],
                       ),
                     ),
@@ -219,7 +331,7 @@ class _DesktopDropdown extends StatelessWidget {
               .map((Chains chain) => Row(
                     children: [
                       Text(
-                        chain.name,
+                        shortenNetwork(chain),
                         style: titleMedium(context),
                       ),
                     ],

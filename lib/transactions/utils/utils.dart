@@ -1,8 +1,13 @@
+import 'package:faucet/blocks/utils/utils.dart';
+import 'package:faucet/chain/models/chains.dart';
 import 'package:faucet/transactions/models/transaction.dart';
 import 'package:faucet/transactions/models/transaction_status.dart';
 import 'package:faucet/transactions/models/transaction_type.dart';
+import 'package:topl_common/proto/brambl/models/transaction/spent_transaction_output.pb.dart';
+import 'package:topl_common/proto/brambl/models/transaction/unspent_transaction_output.pb.dart';
 
-getMockBlock() {}
+import '../../blocks/models/block.dart';
+
 Transaction getMockTransaction() {
   return Transaction(
     transactionId: "8EhwUBiHJ3evyGidV1WH8Q8EhwUBiHJ3evyGidV1WH8Q",
@@ -12,12 +17,56 @@ Transaction getMockTransaction() {
     confirmedTimestamp: DateTime.now().millisecondsSinceEpoch,
     transactionType: TransactionType.transfer,
     amount: 1,
+    quantity: 10,
     transactionFee: 1,
-    senderAddress: '1',
-    receiverAddress: '1',
+    senderAddress: ['1234567890123456789012345678901234567890'],
+    receiverAddress: ['1234567890123456789012345678901234567890'],
     transactionSize: 1,
-    proposition: '1',
-    quantity: 1,
-    name: '1',
+    name: '1234567890',
   );
+}
+
+List<BigInt> getInputBigInts({required List<SpentTransactionOutput> inputs}) {
+  List<SpentTransactionOutput> inputLvls = inputs.where((element) {
+    return element.value.hasLvl();
+  }).toList();
+
+  return inputLvls.map((e) {
+    return BigInt.from(e.value.lvl.quantity.value as num);
+  }).toList();
+}
+
+List<BigInt> getOutputBigInts({required List<UnspentTransactionOutput> outputs}) {
+  List<UnspentTransactionOutput> outputLvls = outputs.where((element) {
+    return element.value.hasLvl();
+  }).toList();
+
+  return outputLvls.map((e) {
+    return BigInt.from(e.value.lvl.quantity.value as num);
+  }).toList();
+}
+
+BigInt calculateAmount({required List<UnspentTransactionOutput> outputs}) {
+  List<BigInt> outputBigInts = getOutputBigInts(outputs: outputs);
+  return outputBigInts.reduce((value, element) => value + element);
+}
+
+BigInt calculateFees({required List<SpentTransactionOutput> inputs, required List<UnspentTransactionOutput> outputs}) {
+  List<BigInt> inputBigInts = getInputBigInts(inputs: inputs);
+  List<BigInt> outputBigInts = getOutputBigInts(outputs: outputs);
+
+  BigInt inputSum = inputBigInts.reduce((value, element) => value + element);
+  BigInt outputSum = outputBigInts.reduce((value, element) => value + element);
+
+  return inputSum - outputSum;
+}
+
+Map<int, Block> sortBlocksByDepth({required Map<int, Block> blocks}) {
+  List<MapEntry<int, Block>> sortedBlocks = blocks.entries.toList();
+  sortedBlocks.sort((a, b) => b.key.compareTo(a.key));
+  return {...Map.fromEntries(sortedBlocks)};
+}
+
+String shortenNetwork(Chains chain) {
+  return chain.networkName.length > 8 ? '${chain.networkName.substring(0, 7)}...' : chain.networkName;
 }
