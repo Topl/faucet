@@ -1,27 +1,27 @@
+import 'package:faucet/requests/models/request.dart';
 import 'package:faucet/shared/theme.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
+
+import '../../requests/providers/requests_provider.dart';
+import '../../shared/constants/network_name.dart';
+import '../../shared/constants/status.dart';
 
 List<String> networks = [
   'Valhalla',
   'Topl Testnet',
 ];
 
-class GetTestTokens extends StatefulWidget {
-  const GetTestTokens({super.key, required this.colorTheme});
-  final ThemeMode colorTheme;
-  @override
-  State<GetTestTokens> createState() => _GetTestTokensState();
-}
-
-class _GetTestTokensState extends State<GetTestTokens> {
+class GetTestTokens extends HookConsumerWidget {
+  GetTestTokens({Key? key, required this.colorTheme}) : super(key: key);
   final TextEditingController textWalletEditingController = TextEditingController();
-
+  final ThemeMode colorTheme;
   final toast = FToast();
 
   String? selectedNetwork = 'Valhalla';
@@ -31,45 +31,6 @@ class _GetTestTokensState extends State<GetTestTokens> {
 
   /// validate is used to validate the input field
   bool validate = false;
-
-  Future<void> _errorDialogBuilder(BuildContext context) {
-    final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: ResponsiveRowColumn(
-            layout: isMobile ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
-            rowMainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ResponsiveRowColumnItem(
-                child: Text(
-                  'Something went wrong...',
-                  style: titleLarge(context),
-                ),
-              ),
-              ResponsiveRowColumnItem(
-                child: IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            ],
-          ),
-          content: SizedBox(
-            width: 400.0,
-            child: Text(
-              'Your request failed. Please try again later.',
-              style: bodyMedium(context),
-            ),
-          ),
-          actionsPadding: const EdgeInsets.all(16),
-        );
-      },
-    );
-  }
 
   Future<void> _successDialogBuilder(BuildContext context) {
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
@@ -198,11 +159,12 @@ class _GetTestTokensState extends State<GetTestTokens> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
+    final notifier = ref.watch(requestProvider.notifier);
 
     return Container(
-      decoration: BoxDecoration(color: getSelectedColor(widget.colorTheme, 0xFFFFFFFF, 0xFF282A2C)),
+      decoration: BoxDecoration(color: getSelectedColor(colorTheme, 0xFFFFFFFF, 0xFF282A2C)),
       child: Padding(
         padding: EdgeInsets.all(isMobile ? 16.0 : 40.0),
         child: Column(
@@ -227,7 +189,7 @@ class _GetTestTokensState extends State<GetTestTokens> {
                   const SizedBox(width: 16),
                   Icon(
                     Icons.warning_amber,
-                    color: getSelectedColor(widget.colorTheme, 0xFF7040EC, 0xFF7040EC),
+                    color: getSelectedColor(colorTheme, 0xFF7040EC, 0xFF7040EC),
                     size: 24,
                   ),
                   const SizedBox(width: 16),
@@ -240,7 +202,7 @@ class _GetTestTokensState extends State<GetTestTokens> {
                           fontSize: 14,
                           fontFamily: 'Rational Display',
                           fontWeight: FontWeight.w300,
-                          color: getSelectedColor(widget.colorTheme, 0xFF7040EC, 0xFF7040EC),
+                          color: getSelectedColor(colorTheme, 0xFF7040EC, 0xFF7040EC),
                         ),
                       ),
                     ),
@@ -261,19 +223,19 @@ class _GetTestTokensState extends State<GetTestTokens> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: getSelectedColor(widget.colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: getSelectedColor(widget.colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: getSelectedColor(widget.colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
                   ),
                 ),
               ),
@@ -301,15 +263,15 @@ class _GetTestTokensState extends State<GetTestTokens> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   border: Border.all(
-                    color: getSelectedColor(widget.colorTheme, 0xFFC0C4C4, 0xFF4B4B4B),
+                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF4B4B4B),
                   ),
-                  color: getSelectedColor(widget.colorTheme, 0xFFFEFEFE, 0xFF282A2C),
+                  color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
                 ),
               ),
               dropdownStyleData: DropdownStyleData(
                 maxHeight: 200,
                 decoration: BoxDecoration(
-                  color: getSelectedColor(widget.colorTheme, 0xFFFEFEFE, 0xFF282A2C),
+                  color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(8.0),
                     bottomRight: Radius.circular(8.0),
@@ -340,14 +302,10 @@ class _GetTestTokensState extends State<GetTestTokens> {
                 );
               }).toList(),
               onChanged: (value) {
-                setState(() {
-                  selectedNetwork = value as String;
-                });
+                selectedNetwork = value as String;
               },
               onMenuStateChange: (isOpen) {
-                setState(() {
-                  isCDropDownOpen = !isCDropDownOpen;
-                });
+                isCDropDownOpen = !isCDropDownOpen;
               },
             ),
             const SizedBox(
@@ -381,19 +339,19 @@ class _GetTestTokensState extends State<GetTestTokens> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: getSelectedColor(widget.colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: getSelectedColor(widget.colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: getSelectedColor(widget.colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
                   ),
                 ),
               ),
@@ -451,8 +409,19 @@ class _GetTestTokensState extends State<GetTestTokens> {
                       height: 56,
                       child: ElevatedButton(
                         onPressed: () {
+                          notifier.makeRequest(
+                            context,
+                            Request(
+                              network: NetworkName.testnet,
+                              walletAddress: textWalletEditingController.text,
+                              // walletAddress: '8EhwUBiHJ3evyGidV1WH8QMfrLF6N8UDze9Yw7jqi6w',
+                              status: Status.confirmed,
+                              dateTime: DateTime.now(),
+                              tokensDisbursed: 100,
+                            ),
+                          );
                           // _successDialogBuilder(context);
-                          _errorDialogBuilder(context);
+                          // _errorDialogBuilder(context);
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
