@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:faucet/shared/theme.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
+import 'package:easy_web_view/easy_web_view.dart';
 
 List<String> networks = [
   'Valhalla',
@@ -419,6 +421,15 @@ class _GetTestTokensState extends State<GetTestTokens> {
             SizedBox(
               height: !isMobile ? 48 : null,
             ),
+            const EasyWebView(
+              src:
+                  'assets/webpages/index.html', //TODO: direct asset for testing use: http://localhost:PORT/assets/webpages/index.html
+              key: Key('recaptcha-widget'),
+              convertToMarkdown: false,
+              isMarkdown: false, // Use markdown syntax
+              convertToWidgets: false, // Try to convert to flutter widgets
+              height: 100,
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 64.0),
               child: Row(
@@ -451,7 +462,6 @@ class _GetTestTokensState extends State<GetTestTokens> {
                       height: 56,
                       child: ElevatedButton(
                         onPressed: () {
-                          // _successDialogBuilder(context);
                           _errorDialogBuilder(context);
                         },
                         style: ButtonStyle(
