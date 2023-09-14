@@ -1,0 +1,31 @@
+<html lang="en">
+    <head>
+        <title>Faucet</title>
+        <script type="text/javascript">
+            var onloadCallback = function () {
+                grecaptcha.render('html_element', {
+                    'sitekey': '',//TODO: Add key here
+                    'callback': 'captchaCallBack'
+                });
+            };
+        </script>
+    </head>
+
+    <body>
+        
+        <form action="?" method="POST">
+            <div id="html_element" ></div>
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
+        </script>
+        <script>
+            function captchaCallBack(response){
+                if(typeof Captcha !== 'undefined'){
+                    Captcha.postMessage(response);
+                }
+            }
+        </script>
+    </body>
+</html>
