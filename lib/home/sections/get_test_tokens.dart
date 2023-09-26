@@ -361,33 +361,41 @@ class GetTestTokens extends HookConsumerWidget {
             const SizedBox(
               height: 8,
             ),
-            SizedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    validate ? "This field is required" : '',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontFamily: 'Rational Display',
-                      color: Color(0xFFF07575),
+            Stack(children: [
+              SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      validate ? "This field is required" : '',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Rational Display',
+                        color: Color(0xFFF07575),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: !isMobile ? 48 : null,
-            ),
-            const EasyWebView(
-              src:
-                  'assets/webpages/index.html', //TODO: direct asset for testing use: http://localhost:PORT/assets/webpages/index.html
-              key: Key('recaptcha-widget'),
-              convertToMarkdown: false,
-              isMarkdown: false, // Use markdown syntax
-              convertToWidgets: false, // Try to convert to flutter widgets
-              height: 100,
-            ),
+              SizedBox(
+                height: !isMobile ? 30 : null,
+              ),
+              const SizedBox(
+                  height: 200,
+                  child: Positioned(
+                      key: Key('recaptcha-widget'),
+                      left: 0,
+                      top: 0,
+                      child: EasyWebView(
+                        src:
+                            'assets/webpages/index.html', //TODO: direct asset for testing use: http://localhost:PORT/assets/webpages/index.html
+                        key: Key('recaptcha-widget'),
+                        convertToMarkdown: false,
+                        isMarkdown: false, // Use markdown syntax
+                        convertToWidgets: false, // Try to convert to flutter widgets
+                        height: 150,
+                      ))),
+            ]),
             Padding(
               padding: const EdgeInsets.only(top: 64.0),
               child: Row(

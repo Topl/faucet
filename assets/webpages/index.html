@@ -1,31 +1,33 @@
 <html lang="en">
     <head>
         <title>Faucet</title>
-        <script type="text/javascript">
-            var onloadCallback = function () {
-                grecaptcha.render('html_element', {
-                    'sitekey': '',//TODO: Add key here
-                    'callback': 'captchaCallBack'
-                });
-            };
-        </script>
-    </head>
-
-    <body>
-        
-        <form action="?" method="POST">
-            <div id="html_element" ></div>
-            <br>
-            <input type="submit" value="Submit">
-        </form>
-        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
-        </script>
         <script>
-            function captchaCallBack(response){
-                if(typeof Captcha !== 'undefined'){
+            function captchaCallBack(response) {
+                if (typeof Captcha !== 'undefined') {
                     Captcha.postMessage(response);
                 }
             }
+                function recaptchaExpiredCallback() {
+                    grecaptcha.reset();
+                };
         </script>
+        <script type="text/javascript">
+            var captchaCallBack = function () {
+                grecaptcha.render('html_element', {
+                    'sitekey': '6LecGzwoAAAAAD5_B-a0Zr7YvL_UVpPCyGXfHCuy', //FOR LOCAL TESTING ONLY
+                    'callback': function () {
+                        captchaCallBack(grecaptcha.getResponse())
+                    },
+                    'expired-callback': recaptchaExpiredCallback,
+                    
+                });
+            };
+        </script>
+        <script src="https://www.google.com/recaptcha/api.js?onload=captchaCallBack&render=explicit" async defer>
+        </script>
+    </head>
+
+    <body> 
+        <div id="html_element"></div>
     </body>
 </html>
