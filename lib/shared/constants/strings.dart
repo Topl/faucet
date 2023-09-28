@@ -145,4 +145,5 @@ class Strings {
   static const String noResultsFound = 'No results found';
   static const String copyToClipboard = 'Copied to Clipboard';
   static const String selectANetwork = 'Select a Network';
+  static const String requestTokens = 'Request Tokens';
 }

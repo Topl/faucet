@@ -1,12 +1,16 @@
+import 'package:faucet/home/sections/get_test_tokens.dart';
 import 'package:faucet/shared/constants/strings.dart';
+import 'package:faucet/shared/constants/ui.dart';
 import 'package:faucet/shared/providers/app_theme_provider.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
+import 'package:faucet/shared/widgets/paginated_table.dart';
 import 'package:faucet/transactions/models/transaction.dart';
 import 'package:faucet/transactions/providers/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:faucet/transactions/sections/transaction_row_item.dart';
 import 'package:faucet/transactions/widgets/custom_transaction_widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:modal_side_sheet/modal_side_sheet.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 /// This is a custom widget that shows the transaction table screen
@@ -46,9 +50,53 @@ class _TransactionTableScreenState extends ConsumerState<TransactionTableScreen>
                             data: Theme.of(context).copyWith(
                               cardColor: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
                             ),
-                            child: PaginatedDataTable(
+                            child: PaginatedTable(
                               showCheckboxColumn: false,
                               headingRowHeight: 80,
+                              footerButton: Row(
+                                children: [
+                                  const SizedBox(width: 180),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      height: 50.0,
+                                      width: 150.0,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        color: const Color(0xFF0DC8D4),
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          showModalSideSheet(
+                                            context: context,
+                                            ignoreAppBar: true,
+                                            width: 640,
+                                            barrierColor: Colors.white.withOpacity(barrierOpacity),
+                                            barrierDismissible: true,
+                                            body: GetTestTokens(
+                                              colorTheme: colorTheme,
+                                            ),
+                                          );
+                                        },
+                                        style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              20.0,
+                                            ),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          Strings.requestTokens,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               columnSpacing: isBiggerTablet
                                   ? 55
                                   : isTablet

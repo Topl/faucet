@@ -32,27 +32,9 @@ class HomeScreen extends HookConsumerWidget {
         decoration: BoxDecoration(
           color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
         ),
-        child: Column(
+        child: const Column(
           children: [
-            const SizedBox(child: TransactionTableScreen()),
-            SizedBox(
-                child: TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                showModalSideSheet(
-                  context: context,
-                  ignoreAppBar: true,
-                  width: 640,
-                  barrierColor: Colors.white.withOpacity(barrierOpacity),
-                  // with blur,
-                  barrierDismissible: true,
-                  body: GetTestTokens(
-                    colorTheme: colorTheme,
-                  ),
-                );
-              },
-              child: const Text('Get test tokens'),
-            )),
+            SizedBox(child: TransactionTableScreen()),
           ],
         ),
       ),
