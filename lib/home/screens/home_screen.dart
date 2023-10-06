@@ -1,6 +1,4 @@
 import 'package:faucet/chain/sections/chainname_dropdown.dart';
-import 'package:faucet/home/sections/get_test_tokens.dart';
-import 'package:faucet/shared/constants/ui.dart';
 import 'package:faucet/shared/providers/app_theme_provider.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
 import 'package:faucet/shared/widgets/footer.dart';
@@ -9,7 +7,6 @@ import 'package:faucet/shared/widgets/layout.dart';
 import 'package:faucet/transactions/sections/transaction_table.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:modal_side_sheet/modal_side_sheet.dart';
 
 class HomeScreen extends HookConsumerWidget {
   static const route = '/';
@@ -32,29 +29,7 @@ class HomeScreen extends HookConsumerWidget {
         decoration: BoxDecoration(
           color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
         ),
-        child: Column(
-          children: [
-            const SizedBox(child: TransactionTableScreen()),
-            SizedBox(
-                child: TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                showModalSideSheet(
-                  context: context,
-                  ignoreAppBar: true,
-                  width: 640,
-                  barrierColor: Colors.white.withOpacity(barrierOpacity),
-                  // with blur,
-                  barrierDismissible: true,
-                  body: GetTestTokens(
-                    colorTheme: colorTheme,
-                  ),
-                );
-              },
-              child: const Text('Get test tokens'),
-            )),
-          ],
-        ),
+        child: const SizedBox(child: TransactionTableScreen()),
       ),
       footer: Container(
         color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
