@@ -146,4 +146,5 @@ class Strings {
   static const String copyToClipboard = 'Copied to Clipboard';
   static const String selectANetwork = 'Select a Network';
   static const String requestTokens = 'Request Tokens';
+  static const String getTestNetwork = 'Get Test Network';
 }

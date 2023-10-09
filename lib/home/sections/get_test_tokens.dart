@@ -1,4 +1,5 @@
 import 'package:faucet/requests/models/request.dart';
+import 'package:faucet/shared/constants/strings.dart';
 import 'dart:async';
 import 'package:faucet/shared/theme.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
@@ -173,7 +174,7 @@ class GetTestTokens extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Get Test Network',
+              Strings.getTestNetwork,
               style: headlineLarge(context),
             ),
             const SizedBox(

@@ -85,7 +85,7 @@ class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
       final remainingRateLimitTime = ref.read(remainingRateLimitTimeProvider);
       if (remainingRateLimitTime != null) {
         throw Exception(
-          'Rate limit reached. Please wait a ${remainingRateLimitTime.inSeconds} seconds and try again.',
+          'Max token limit (100 LVL) reached. Please try again in half an hour.',
         );
       }
 
