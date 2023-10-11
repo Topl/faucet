@@ -13,17 +13,26 @@ void main() async {
   await Hive.initFlutter();
 
   runApp(
-    ProviderScope(
-      child: ResponsiveBreakpoints.builder(
-        child: const FaucetRouter(),
-        breakpoints: const [
-          Breakpoint(start: 0, end: mobileBreak, name: MOBILE),
-          Breakpoint(start: mobileBreak + 1, end: tabletBreak, name: TABLET),
-          Breakpoint(start: tabletBreak + 1, end: double.infinity, name: DESKTOP),
-        ],
-      ),
+    const ProviderScope(
+      child: ResponsiveBreakPointsWrapper(),
     ),
   );
+}
+
+class ResponsiveBreakPointsWrapper extends StatelessWidget {
+  const ResponsiveBreakPointsWrapper({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveBreakpoints.builder(
+      child: const FaucetRouter(),
+      breakpoints: const [
+        Breakpoint(start: 0, end: mobileBreak, name: MOBILE),
+        Breakpoint(start: mobileBreak + 1, end: tabletBreak, name: TABLET),
+        Breakpoint(start: tabletBreak + 1, end: double.infinity, name: DESKTOP),
+      ],
+    );
+  }
 }
 
 class FaucetRouter extends HookConsumerWidget {
