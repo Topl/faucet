@@ -11,6 +11,8 @@ import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
 
 import '../../shared/theme.dart';
+import 'package:brambl_dart/brambl_dart.dart';
+import 'package:topl_common/proto/brambl/models/indices.pb.dart';
 
 //Future provider used for pagination of requests
 final requestStateAtIndexProvider = FutureProvider.family<Request, int>((ref, index) async {
