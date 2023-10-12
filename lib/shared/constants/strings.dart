@@ -147,4 +147,8 @@ class Strings {
   static const String selectANetwork = 'Select a Network';
   static const String requestTokens = 'Request Tokens';
   static const String getTestNetwork = 'Get Test Network';
+  static const String viewExplorer = 'View in Annulus Topl Explorer';
+  static const String requestSuccessful = 'Your request was successful.';
+  static const String txnHash = 'Your txn hash';
+  static const String getLVL = 'Get 100 LVL';
 }
