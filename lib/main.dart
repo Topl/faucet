@@ -42,21 +42,24 @@ class FaucetRouter extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return VRouter(
-      debugShowCheckedModeBanner: false,
-      title: 'Faucet',
-      initialUrl: HomeScreen.route,
-      theme: lightTheme(context: context),
-      darkTheme: darkTheme(context: context),
-      themeMode: ref.watch(appThemeColorProvider),
-      routes: [
-        VWidget(
-          path: HomeScreen.route,
-          widget: HomeScreen(
-            colorTheme: ref.watch(appThemeColorProvider),
-          ),
-        ),
-      ],
-    );
+    final breakPoints = ResponsiveBreakpoints.of(context).breakpoints;
+    return breakPoints.isEmpty
+        ? Container()
+        : VRouter(
+            debugShowCheckedModeBanner: false,
+            title: 'Faucet',
+            initialUrl: HomeScreen.route,
+            theme: lightTheme(context: context),
+            darkTheme: darkTheme(context: context),
+            themeMode: ref.watch(appThemeColorProvider),
+            routes: [
+              VWidget(
+                path: HomeScreen.route,
+                widget: HomeScreen(
+                  colorTheme: ref.watch(appThemeColorProvider),
+                ),
+              ),
+            ],
+          );
   }
 }

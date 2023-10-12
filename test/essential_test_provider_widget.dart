@@ -3,6 +3,7 @@ import 'dart:convert';
 
 // Flutter imports:
 import 'package:faucet/main.dart';
+import 'package:faucet/shared/providers/genus_provider.dart';
 import 'package:faucet/shared/services/hive/hive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'mocks/genus_mocks.dart';
 import 'mocks/hive_mocks.dart';
 
 // Project imports:
@@ -42,6 +44,7 @@ Future<Widget> essentialTestProviderWidget({
   List<Override> overrides = const [],
 }) async {
   overrides = [
+    genusProvider.overrideWith((ref, arg) => getMockGenus()),
     hivePackageProvider.overrideWithValue(getMockHive()),
     ...overrides,
   ];

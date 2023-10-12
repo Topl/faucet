@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'essential_test_provider_widget.dart';
-import 'utils/tester_utils.dart';
 
 void main() {
   testWidgets(
@@ -12,7 +11,7 @@ void main() {
       );
 
       await tester.pump();
-      await pendingTimersFix(tester);
+      // await pendingTimersFix(tester);
     },
   );
 }
