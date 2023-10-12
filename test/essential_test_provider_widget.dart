@@ -3,12 +3,15 @@ import 'dart:convert';
 
 // Flutter imports:
 import 'package:faucet/main.dart';
+import 'package:faucet/shared/services/hive/hive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'mocks/hive_mocks.dart';
 
 // Project imports:
 
@@ -39,13 +42,14 @@ Future<Widget> essentialTestProviderWidget({
   List<Override> overrides = const [],
 }) async {
   overrides = [
+    hivePackageProvider.overrideWithValue(getMockHive()),
     ...overrides,
   ];
-  WidgetsFlutterBinding.ensureInitialized();
   TestWidgetsFlutterBinding.ensureInitialized();
 
   return ProviderScope(
     overrides: overrides,
+    // child: const ResponsiveBreakPointsWrapper(),
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultAssetBundle(

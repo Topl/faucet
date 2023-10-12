@@ -1,4 +1,3 @@
-import 'dart:html' as html;
 import 'package:faucet/shared/constants/strings.dart';
 import 'package:faucet/shared/providers/app_theme_provider.dart';
 import 'package:faucet/shared/theme.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Footer Widget
 class Footer extends HookConsumerWidget {
@@ -161,7 +161,7 @@ class RowIconsFooter extends HookConsumerWidget {
                     child: IconButton(
                       onPressed: () {
                         //TODO: P.S line only applicable to web version
-                        html.window.open(svgIcon['url'], "");
+                        launchUrl(svgIcon['url']);
                       },
                       icon: SvgPicture.asset(
                         svgIcon['icon'],

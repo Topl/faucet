@@ -105,3 +105,7 @@ web_profile:
 web_build_and_host:
 	@flutter build web --web-renderer html --csp --release
 	@cd build/web && python3 -m http.server 8000
+
+file_test:
+	@reset
+	@flutter test test/example_test.dart

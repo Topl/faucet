@@ -30,60 +30,62 @@ class CustomLayout extends HookConsumerWidget {
 
     return Scaffold(
       key: scaffoldKey,
-      endDrawer: Container(
-        height: 500,
-        margin: EdgeInsets.only(bottom: isTablet ? 520 : 320),
-        color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Drawer(
-            backgroundColor: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
-            width: double.infinity,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: ListTile(
-                    title: Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+      endDrawer: Material(
+        child: Container(
+          height: 500,
+          margin: EdgeInsets.only(bottom: isTablet ? 520 : 320),
+          color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Drawer(
+              backgroundColor: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
+              width: double.infinity,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: ListTile(
+                      title: Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: ListView(
-                      padding: const EdgeInsets.only(top: 30),
-                      children: <Widget>[
-                        ListTile(
-                          title: ChainNameDropDown(
-                            colorTheme: colorTheme,
-                            onItemSelected: () => Navigator.of(context).pop(),
+                  Expanded(
+                    child: Center(
+                      child: ListView(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.only(top: 30),
+                        children: <Widget>[
+                          ListTile(
+                            title: ChainNameDropDown(
+                              colorTheme: colorTheme,
+                              onItemSelected: () => Navigator.of(context).pop(),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
       appBar: null,
-      body: Column(
-        children: [
-          // Header widget
-          Container(color: Colors.white, child: header),
-          // Content widget
-          Expanded(
-            child: Container(
-              color: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header widget
+            Container(color: Colors.white, child: header),
+            // Content widget
+            Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -96,8 +98,8 @@ class CustomLayout extends HookConsumerWidget {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
