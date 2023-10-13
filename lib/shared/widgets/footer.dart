@@ -22,7 +22,6 @@ class Footer extends HookConsumerWidget {
     final isDesktopAndTab = ResponsiveBreakpoints.of(context).between(TABLET, DESKTOP);
 
     final currentWidth = MediaQuery.of(context).size.width;
-    print('QQQQ $currentWidth');
 
     final colorTheme = ref.watch(appThemeColorProvider);
     return Column(

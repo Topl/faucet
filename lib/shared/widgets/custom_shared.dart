@@ -112,7 +112,6 @@ class ResponsiveFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
-    print('QQQQ $isMobile');
     return ResponsiveRowColumn(
       layout: ResponsiveBreakpoints.of(context).smallerOrEqualTo(MOBILE)
           ? ResponsiveRowColumnType.COLUMN

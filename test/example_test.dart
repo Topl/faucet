@@ -10,11 +10,8 @@ void main() {
       await tester.pumpWidget(
         await essentialTestProviderWidget(),
       );
-      print('QQQQ 1');
       await tester.pump();
-      print('QQQQ 2');
       await pendingTimersFix(tester);
-      print('QQQQ 3');
     },
   );
 }
