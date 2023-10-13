@@ -2,7 +2,7 @@ import 'package:faucet/shared/services/hive/hive_service.dart';
 import 'package:faucet/shared/services/hive/hives.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-const rateLimitDuration = Duration(seconds: 10);
+const rateLimitDuration = Duration(minutes: 30);
 
 /// A provider that calculates the remaining time until the rate limit resets.
 ///

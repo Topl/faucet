@@ -1,5 +1,5 @@
 import 'package:faucet/requests/models/request.dart';
-import 'dart:async';
+import 'package:faucet/shared/constants/strings.dart';
 import 'package:faucet/shared/theme.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:responsive_framework/responsive_row_column.dart';
 import 'package:easy_web_view/easy_web_view.dart';
 
 import '../../requests/providers/requests_provider.dart';
@@ -29,136 +28,9 @@ class GetTestTokens extends HookConsumerWidget {
   String? selectedNetwork = 'Valhalla';
 
   bool isCDropDownOpen = false;
-  String transactionHash = 'a1075db55d416d3ca199f55b6e2115b9345e16c5cf302fc80e9d5fb';
 
   /// validate is used to validate the input field
   bool validate = false;
-
-  Future<void> _successDialogBuilder(BuildContext context) {
-    final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
-
-    final isTablet = ResponsiveBreakpoints.of(context).equals(TABLET);
-
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: ResponsiveRowColumn(
-            layout: isMobile ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
-            rowMainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ResponsiveRowColumnItem(
-                child: Text(
-                  'Confirmed!',
-                  style: titleLarge(context),
-                ),
-              ),
-              ResponsiveRowColumnItem(
-                child: IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            ],
-          ),
-          content: SizedBox(
-            width: 550.0,
-            height: 300.0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Your request was successful.',
-                  style: bodyMedium(context),
-                ),
-                const SizedBox(height: 30),
-                Text(
-                  'Your txn hash',
-                  style: titleSmall(context),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-                  width: double.infinity,
-                  alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromRGBO(112, 64, 236, 0.04),
-                  ),
-                  child: ResponsiveRowColumn(
-                    layout: isTablet ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
-                    children: [
-                      ResponsiveRowColumnItem(
-                        child: SelectableText(
-                          transactionHash,
-                          style: bodyMedium(context),
-                        ),
-                      ),
-                      const ResponsiveRowColumnItem(
-                        child: SizedBox(width: 8),
-                      ),
-                      ResponsiveRowColumnItem(
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.copy,
-                            color: Color(0xFF858E8E),
-                          ),
-                          onPressed: () {
-                            Clipboard.setData(
-                              ClipboardData(text: transactionHash),
-                            );
-                            toast.showToast(
-                              child: const Text('Copied to clipboard'),
-                              gravity: ToastGravity.BOTTOM,
-                              toastDuration: const Duration(seconds: 2),
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  child: TextButton(
-                    onPressed: () {
-                      //  TODO: Add link to explorer using url_launcher
-                    },
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                      ),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xFF0DC8D4),
-                      ),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'View in Annulus Topl Explorer',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w300,
-                        fontFamily: "Rational Display",
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          actionsPadding: const EdgeInsets.all(4),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -173,7 +45,7 @@ class GetTestTokens extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Get Test Network',
+              Strings.getTestNetwork,
               style: headlineLarge(context),
             ),
             const SizedBox(
@@ -368,11 +240,7 @@ class GetTestTokens extends HookConsumerWidget {
                   children: [
                     Text(
                       validate ? "This field is required" : '',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Rational Display',
-                        color: Color(0xFFF07575),
-                      ),
+                      style: titleSmall(context),
                     ),
                   ],
                 ),
@@ -407,16 +275,13 @@ class GetTestTokens extends HookConsumerWidget {
                       width: isMobile ? 100 : 272,
                       height: 56,
                       child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Cancel',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'Rational Display',
-                              color: Color(0xFF858E8E),
-                            )),
-                      ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Cancel',
+                            style: titleSmall(context),
+                          )),
                     ),
                   ),
                   const SizedBox(
@@ -433,14 +298,11 @@ class GetTestTokens extends HookConsumerWidget {
                             Request(
                               network: NetworkName.testnet,
                               walletAddress: textWalletEditingController.text,
-                              // walletAddress: '8EhwUBiHJ3evyGidV1WH8QMfrLF6N8UDze9Yw7jqi6w',
                               status: Status.confirmed,
                               dateTime: DateTime.now(),
                               tokensDisbursed: 100,
                             ),
                           );
-                          // _successDialogBuilder(context);
-                          // _errorDialogBuilder(context);
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
@@ -452,13 +314,9 @@ class GetTestTokens extends HookConsumerWidget {
                             ),
                           ),
                         ),
-                        child: const Text(
-                          'Get 100 LVL',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: 'Rational Display',
-                            color: Color(0xFFFEFEFE),
-                          ),
+                        child: Text(
+                          Strings.getLVL,
+                          style: titleSmall(context)!.copyWith(color: Colors.white),
                         ),
                       ),
                     ),
