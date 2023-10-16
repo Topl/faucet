@@ -13,17 +13,26 @@ void main() async {
   await Hive.initFlutter();
 
   runApp(
-    ProviderScope(
-      child: ResponsiveBreakpoints.builder(
-        child: const FaucetRouter(),
-        breakpoints: const [
-          Breakpoint(start: 0, end: mobileBreak, name: MOBILE),
-          Breakpoint(start: mobileBreak + 1, end: tabletBreak, name: TABLET),
-          Breakpoint(start: tabletBreak + 1, end: double.infinity, name: DESKTOP),
-        ],
-      ),
+    const ProviderScope(
+      child: ResponsiveBreakPointsWrapper(),
     ),
   );
+}
+
+class ResponsiveBreakPointsWrapper extends StatelessWidget {
+  const ResponsiveBreakPointsWrapper({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveBreakpoints.builder(
+      child: const FaucetRouter(),
+      breakpoints: const [
+        Breakpoint(start: 0, end: mobileBreak, name: MOBILE),
+        Breakpoint(start: mobileBreak + 1, end: tabletBreak, name: TABLET),
+        Breakpoint(start: tabletBreak + 1, end: double.infinity, name: DESKTOP),
+      ],
+    );
+  }
 }
 
 class FaucetRouter extends HookConsumerWidget {
@@ -33,21 +42,24 @@ class FaucetRouter extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return VRouter(
-      debugShowCheckedModeBanner: false,
-      title: 'Faucet',
-      initialUrl: HomeScreen.route,
-      theme: lightTheme(context: context),
-      darkTheme: darkTheme(context: context),
-      themeMode: ref.watch(appThemeColorProvider),
-      routes: [
-        VWidget(
-          path: HomeScreen.route,
-          widget: HomeScreen(
-            colorTheme: ref.watch(appThemeColorProvider),
-          ),
-        ),
-      ],
-    );
+    final breakPoints = ResponsiveBreakpoints.of(context).breakpoints;
+    return breakPoints.isEmpty
+        ? Container()
+        : VRouter(
+            debugShowCheckedModeBanner: false,
+            title: 'Faucet',
+            initialUrl: HomeScreen.route,
+            theme: lightTheme(context: context),
+            darkTheme: darkTheme(context: context),
+            themeMode: ref.watch(appThemeColorProvider),
+            routes: [
+              VWidget(
+                path: HomeScreen.route,
+                widget: HomeScreen(
+                  colorTheme: ref.watch(appThemeColorProvider),
+                ),
+              ),
+            ],
+          );
   }
 }

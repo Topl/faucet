@@ -1,8 +1,9 @@
-import 'package:faucet/shared/constants/strings.dart';
-import 'package:faucet/shared/utils/theme_color.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
+
+import '../constants/strings.dart';
+import '../utils/theme_color.dart';
 
 class FooterContent extends StatelessWidget {
   const FooterContent({
@@ -16,31 +17,26 @@ class FooterContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final isTablet = ResponsiveBreakpoints.of(context).equals(TABLET);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Container(
-          margin: isTablet ? EdgeInsets.zero : const EdgeInsets.only(left: 10),
-          padding: isTablet ? const EdgeInsets.only(right: 60) : EdgeInsets.zero,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              Strings.footerColumn5Header,
-              style: TextStyle(
-                color: getSelectedColor(colorTheme, 0xFF282A2C, 0xFFC0C4C4),
-                fontSize: 16,
-                fontFamily: Strings.rationalDisplayFont,
-                fontWeight: FontWeight.w600,
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            Strings.footerColumn5Header,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: getSelectedColor(colorTheme, 0xFF282A2C, 0xFFC0C4C4),
+              fontSize: 16,
+              fontFamily: Strings.rationalDisplayFont,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ),
-        const SizedBox(height: 14),
-        Container(
-          margin: isTablet ? EdgeInsets.zero : const EdgeInsets.only(right: 10, left: 10),
-          padding: isTablet ? const EdgeInsets.only(left: 50) : EdgeInsets.zero,
-          child: Row(
+          const SizedBox(height: 14),
+          Row(
             mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               isTablet
                   ? CustomFooterTextField(isTablet: isTablet)
@@ -50,7 +46,7 @@ class FooterContent extends StatelessWidget {
               const SizedBox(width: 8),
               SizedBox(
                 height: 40,
-                width: 102,
+                // width: 102,
                 child: TextButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
@@ -70,8 +66,8 @@ class FooterContent extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -116,7 +112,6 @@ class ResponsiveFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
-
     return ResponsiveRowColumn(
       layout: ResponsiveBreakpoints.of(context).smallerOrEqualTo(MOBILE)
           ? ResponsiveRowColumnType.COLUMN

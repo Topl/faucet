@@ -1,14 +1,24 @@
 import 'package:faucet/shared/services/hive/hives.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+final hivePackageProvider = Provider<HiveInterface>((ref) {
+  return Hive;
+});
+
+final hiveProvider = Provider<HiveService>((ref) {
+  return HiveService(ref);
+});
 
 class HiveService {
-  HiveService();
+  final Ref ref;
+  HiveService(this.ref);
   Future<Box<dynamic>> _openBox(String box) async {
-    return await Hive.openBox(box);
+    return await ref.read(hivePackageProvider).openBox(box);
   }
 
   Future<void> putItem({
-    required Hives boxType,
+    required HivesBox boxType,
     required String key,
     required dynamic value,
   }) async {
@@ -17,7 +27,7 @@ class HiveService {
   }
 
   Future<dynamic> getItem({
-    required Hives boxType,
+    required HivesBox boxType,
     required String key,
   }) async {
     final box = await _openBox(boxType.id);
@@ -25,14 +35,14 @@ class HiveService {
   }
 
   Future<Iterable<dynamic>> getAllItems({
-    required Hives boxType,
+    required HivesBox boxType,
   }) async {
     final box = await _openBox(boxType.id);
     return box.values;
   }
 
   Future<void> deleteItem({
-    required Hives boxType,
+    required HivesBox boxType,
     required String key,
   }) async {
     final box = await _openBox(boxType.id);
@@ -40,7 +50,7 @@ class HiveService {
   }
 
   Future<void> deleteBox({
-    required Hives boxType,
+    required HivesBox boxType,
   }) async {
     final box = await _openBox(boxType.id);
     await box.deleteFromDisk();

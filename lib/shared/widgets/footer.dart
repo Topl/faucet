@@ -1,14 +1,14 @@
-import 'dart:html' as html;
-import 'package:faucet/shared/constants/strings.dart';
-import 'package:faucet/shared/providers/app_theme_provider.dart';
 import 'package:faucet/shared/theme.dart';
-import 'package:faucet/shared/utils/theme_color.dart';
-import 'package:faucet/shared/widgets/custom_shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../constants/strings.dart';
+import '../providers/app_theme_provider.dart';
+import '../utils/theme_color.dart';
+import 'custom_shared.dart';
 
 /// Footer Widget
 class Footer extends HookConsumerWidget {
@@ -20,6 +20,8 @@ class Footer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDesktop = ResponsiveBreakpoints.of(context).equals(DESKTOP);
     final isDesktopAndTab = ResponsiveBreakpoints.of(context).between(TABLET, DESKTOP);
+
+    final currentWidth = MediaQuery.of(context).size.width;
 
     final colorTheme = ref.watch(appThemeColorProvider);
     return Column(
@@ -43,49 +45,44 @@ class Footer extends HookConsumerWidget {
         const SizedBox(
           height: 20,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            isDesktopAndTab
-                ? const Row(
-                    children: [
-                      SizedBox(
-                        width: 80,
-                      ),
-                      FooterBottomLinks(text: Strings.footerPrivacyPolicy),
-                      SizedBox(
-                        width: 24,
-                      ),
-                      FooterBottomLinks(text: Strings.footerTermsOfUse),
-                      SizedBox(
-                        width: 24,
-                      ),
-                      FooterBottomLinks(text: Strings.footerCookiePolicy),
-                      SizedBox(
-                        width: 24,
-                      ),
-                      FooterBottomLinks(text: Strings.footerCookiePreferences),
-                    ],
-                  )
-                : const SizedBox(),
-            Row(
-              children: [
-                const FooterBottomLinks(text: Strings.footerRightsReserved),
-                SizedBox(
-                  width: isDesktopAndTab ? 24 : 200,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (isDesktopAndTab)
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FooterBottomLinks(text: Strings.footerPrivacyPolicy),
+                    SizedBox(width: 15),
+                    FooterBottomLinks(text: Strings.footerTermsOfUse),
+                    SizedBox(width: 15),
+                    FooterBottomLinks(text: Strings.footerCookiePolicy),
+                    SizedBox(width: 15),
+                    FooterBottomLinks(text: Strings.footerCookiePreferences),
+                  ],
                 ),
-                SvgPicture.asset(
-                  colorTheme == ThemeMode.light ? 'assets/icons/logo.svg' : 'assets/icons/logo_dark.svg',
-                  width: 32,
-                  height: 20,
+              if (isDesktopAndTab)
+                const Expanded(
+                  child: SizedBox(),
                 ),
-                SizedBox(
-                  width: isDesktopAndTab ? 80 : 20,
-                ),
-              ],
-            ),
-          ],
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const FooterBottomLinks(text: Strings.footerRightsReserved),
+                  const SizedBox(width: 15),
+                  SvgPicture.asset(
+                    colorTheme == ThemeMode.light ? 'assets/icons/logo.svg' : 'assets/icons/logo_dark.svg',
+                    width: 32,
+                    height: 20,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
         const SizedBox(
           height: 20,
@@ -161,7 +158,7 @@ class RowIconsFooter extends HookConsumerWidget {
                     child: IconButton(
                       onPressed: () {
                         //TODO: P.S line only applicable to web version
-                        html.window.open(svgIcon['url'], "");
+                        launchUrl(svgIcon['url']);
                       },
                       icon: SvgPicture.asset(
                         svgIcon['icon'],
