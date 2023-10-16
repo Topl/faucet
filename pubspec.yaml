@@ -49,6 +49,7 @@ dependencies:
   hive_flutter: ^1.1.0
   easy_web_view: ^1.6.0
   url_launcher: ^6.1.14
+  fixnum: ^1.1.0
   
 
 dev_dependencies:

@@ -139,16 +139,21 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
       }
       return blocks;
     }
+    print('QQQQ get latest blocks 1');
+
     try {
       final genusClient = ref.read(genusProvider(selectedChain));
+      print('QQQQ get latest blocks 2');
 
       if (setState) state = const AsyncLoading();
       //futures
       final List<Block> blocks = [];
       const pageLimit = 10;
       final presentConfig = await config;
+      print('QQQQ get latest blocks 3');
 
       final block0Res = await genusClient.getBlockByDepth(depth: 0);
+      print('QQQQ blockres ${block0Res}');
       blocks.add(
         Block.fromBlockRes(
           blockRes: block0Res,
@@ -158,7 +163,9 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
 
       //fetch more blocks with block0 as the reference for a fixed depth
       for (int i = 1; i < pageLimit; i++) {
+        print('QQQQ get block by height 1');
         final blockRes = await genusClient.getBlockByHeight(height: blocks[0].height - i);
+        print('QQQQ get block by height 2');
         blocks.add(
           Block.fromBlockRes(
             blockRes: blockRes,
@@ -174,6 +181,7 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
 
       return blocks;
     } catch (e) {
+      print('QQQQ Error $e');
       throw Exception('Error in blockProvider: $e');
     }
   }
@@ -276,7 +284,10 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
   Future<BlockResponse> getFirstPopulatedBlock() async {
     int depth = 0;
     final genusClient = ref.read(genusProvider(selectedChain));
+    print('QQQQ first populated block 1');
     var nextBlock = await genusClient.getBlockByDepth(depth: depth);
+    print('QQQQ first populated block 2 $nextBlock');
+
     //check that block has transactions
     while (!nextBlock.block.fullBody.hasField(1)) {
       depth++;

@@ -1,5 +1,6 @@
 import 'package:faucet/blocks/utils/utils.dart';
 import 'package:faucet/chain/models/chains.dart';
+import 'package:faucet/shared/extensions/extensions.dart';
 import 'package:faucet/transactions/models/transaction.dart';
 import 'package:faucet/transactions/models/transaction_status.dart';
 import 'package:faucet/transactions/models/transaction_type.dart';
@@ -32,7 +33,7 @@ List<BigInt> getInputBigInts({required List<SpentTransactionOutput> inputs}) {
   }).toList();
 
   return inputLvls.map((e) {
-    return BigInt.from(e.value.lvl.quantity.value as num);
+    return e.value.lvl.quantity.value.toBigInt;
   }).toList();
 }
 
@@ -42,7 +43,8 @@ List<BigInt> getOutputBigInts({required List<UnspentTransactionOutput> outputs})
   }).toList();
 
   return outputLvls.map((e) {
-    return BigInt.from(e.value.lvl.quantity.value as num);
+    print('QQQQ e $e');
+    return e.value.lvl.quantity.value.toBigInt;
   }).toList();
 }
 
