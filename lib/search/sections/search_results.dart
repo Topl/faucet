@@ -8,14 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SearchResults extends HookConsumerWidget {
+  static const searchResultsKey = Key('searchResultsKey');
   final Function(SearchResult) resultSelected;
   const SearchResults({
     required this.resultSelected,
-    Key? key,
+    Key key = searchResultsKey,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('QQQQ SearchResults build');
     final colorTheme = ref.watch(appThemeColorProvider);
     List<SearchResult> results = ref.watch(searchProvider);
     bool isLoading = ref.watch(isLoadingRpcSearchResultsProvider);

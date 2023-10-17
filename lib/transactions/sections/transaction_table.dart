@@ -26,7 +26,6 @@ class _TransactionTableScreenState extends ConsumerState<TransactionTableScreen>
   var _rowsPerPage = 10; //PaginatedDataTable.defaultRowsPerPage;
   @override
   Widget build(BuildContext context) {
-    print('QQQQ here 4');
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
     final isTablet = ResponsiveBreakpoints.of(context).equals(TABLET);
     final isBiggerTablet = MediaQuery.of(context).size.width == 1024;
@@ -37,7 +36,6 @@ class _TransactionTableScreenState extends ConsumerState<TransactionTableScreen>
 
     return transactionsInfo.when(
         data: (transactions) {
-          print('QQQQ here 5 $transactions');
           return Container(
             color: colorTheme == ThemeMode.light ? const Color(0xFFFEFEFE) : const Color(0xFF282A2C),
             child: Column(

@@ -153,7 +153,6 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
       print('QQQQ get latest blocks 3');
 
       final block0Res = await genusClient.getBlockByDepth(depth: 0);
-      print('QQQQ blockres ${block0Res}');
       blocks.add(
         Block.fromBlockRes(
           blockRes: block0Res,
@@ -284,9 +283,7 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
   Future<BlockResponse> getFirstPopulatedBlock() async {
     int depth = 0;
     final genusClient = ref.read(genusProvider(selectedChain));
-    print('QQQQ first populated block 1');
     var nextBlock = await genusClient.getBlockByDepth(depth: depth);
-    print('QQQQ first populated block 2 $nextBlock');
 
     //check that block has transactions
     while (!nextBlock.block.fullBody.hasField(1)) {

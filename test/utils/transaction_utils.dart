@@ -1,3 +1,4 @@
+import 'package:faucet/shared/utils/decode_id.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:topl_common/proto/brambl/models/address.pb.dart';
 import 'package:topl_common/proto/brambl/models/box/value.pb.dart';
@@ -10,7 +11,10 @@ import 'package:topl_common/proto/brambl/models/transaction/spent_transaction_ou
 import 'package:topl_common/proto/brambl/models/transaction/unspent_transaction_output.pb.dart';
 import 'package:topl_common/proto/quivr/models/shared.pb.dart';
 
-getMockIoTransaction() {
+getMockIoTransaction({
+  String id = '1',
+}) {
+  print('QQQQ getMockIoTransaction $id');
   return IoTransaction(
     datum: Datum_IoTransaction(
       event: Event_IoTransaction(
@@ -27,18 +31,18 @@ getMockIoTransaction() {
       ),
     ),
     inputs: [
-      _getSpentTransactionOutput(),
+      _getSpentTransactionOutput(id: id),
     ],
     outputs: [
       _getUnspentTransactionOutput(),
     ],
-    transactionId: _getTransactionId(),
+    transactionId: _getTransactionId(id),
   );
 }
 
-TransactionId _getTransactionId() {
+TransactionId _getTransactionId(String id) {
   return TransactionId(
-    value: [1, 2, 3, 4, 5, 6, 7, 8],
+    value: encodeId(id),
   );
 }
 
@@ -55,10 +59,12 @@ UnspentTransactionOutput _getUnspentTransactionOutput() {
   );
 }
 
-SpentTransactionOutput _getSpentTransactionOutput() {
+SpentTransactionOutput _getSpentTransactionOutput({
+  required String id,
+}) {
   return SpentTransactionOutput(
     address: TransactionOutputAddress(
-      id: TransactionId(value: [1, 2, 3, 4, 5, 6, 7, 8]),
+      id: TransactionId(value: encodeId(id)),
       index: 1,
       ledger: 1,
       network: 1,

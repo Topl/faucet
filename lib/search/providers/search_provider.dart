@@ -52,6 +52,7 @@ class SearchNotifier extends StateNotifier<List<SearchResult>> {
       final matchingCurrentBlocks =
           currentBlocks.values.where((Block element) => element.header.toLowerCase().contains(id.toLowerCase()));
       if (matchingCurrentBlocks.isNotEmpty) {
+        print('QQQQ matchingCurrentBlocks: $matchingCurrentBlocks');
         blockResults.addAll(matchingCurrentBlocks
             .map((Block block) => BlockResult(
                   block,

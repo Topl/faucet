@@ -1,3 +1,4 @@
+import 'package:faucet/shared/utils/decode_id.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:topl_common/proto/consensus/models/block_header.pb.dart';
 import 'package:topl_common/proto/consensus/models/block_id.pb.dart';
@@ -9,7 +10,12 @@ import 'package:topl_common/proto/node/models/block.pb.dart';
 
 import 'transaction_utils.dart';
 
-getMockBlockResponse() {
+getMockBlockResponse({
+  String? blockId,
+  String? transactionId,
+}) {
+  blockId ??= createId();
+  transactionId ??= createId();
   return BlockResponse(
     block: FullBlock(
       header: BlockHeader(
@@ -17,7 +23,7 @@ getMockBlockResponse() {
         height: Int64(1),
         bloomFilter: [],
         eligibilityCertificate: EligibilityCertificate(),
-        headerId: BlockId(value: [1, 2, 3, 4, 5, 6, 7, 8]),
+        headerId: BlockId(value: encodeId(blockId)),
         metadata: [],
         operationalCertificate: OperationalCertificate(),
         parentHeaderId: BlockId(value: [1, 2, 3, 4, 5, 6, 7, 8]),
@@ -26,7 +32,14 @@ getMockBlockResponse() {
         timestamp: Int64(DateTime.now().millisecondsSinceEpoch),
         txRoot: [],
       ),
-      fullBody: FullBlockBody(transactions: [getMockIoTransaction()]),
+      fullBody: FullBlockBody(
+        transactions: List.generate(
+          10,
+          (index) => getMockIoTransaction(
+            id: '${blockId}transaction$transactionId',
+          ),
+        ),
+      ),
     ),
   );
 }

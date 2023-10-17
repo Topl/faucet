@@ -43,7 +43,6 @@ List<BigInt> getOutputBigInts({required List<UnspentTransactionOutput> outputs})
   }).toList();
 
   return outputLvls.map((e) {
-    print('QQQQ e $e');
     return e.value.lvl.quantity.value.toBigInt;
   }).toList();
 }
