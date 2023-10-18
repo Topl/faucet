@@ -24,7 +24,6 @@ class ResponsiveBreakPointsWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('QQQQ here 1');
     return ResponsiveBreakpoints.builder(
       child: const FaucetRouter(),
       breakpoints: const [
@@ -43,7 +42,6 @@ class FaucetRouter extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('QQQQ here 2');
     final breakPoints = ResponsiveBreakpoints.of(context).breakpoints;
     return breakPoints.isEmpty
         ? Container()

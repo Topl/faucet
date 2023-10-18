@@ -14,7 +14,6 @@ import 'package:topl_common/proto/quivr/models/shared.pb.dart';
 getMockIoTransaction({
   String id = '1',
 }) {
-  print('QQQQ getMockIoTransaction $id');
   return IoTransaction(
     datum: Datum_IoTransaction(
       event: Event_IoTransaction(

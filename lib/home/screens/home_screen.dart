@@ -15,7 +15,6 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('QQQQ here 3');
     final colorTheme = ref.watch(appThemeColorProvider);
     return CustomLayout(
       header: Header(

@@ -24,7 +24,6 @@ class Header extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeMode colorTheme = ref.watch(appThemeColorProvider);
     final isMobile = ResponsiveBreakpoints.of(context).isMobile;
-    print('QQQQ mobile $isMobile');
 
     final isSmallerThanOrEqualToTablet = ResponsiveBreakpoints.of(context).smallerOrEqualTo(TABLET);
     return Container(

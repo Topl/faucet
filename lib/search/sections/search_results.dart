@@ -17,7 +17,6 @@ class SearchResults extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('QQQQ SearchResults build');
     final colorTheme = ref.watch(appThemeColorProvider);
     List<SearchResult> results = ref.watch(searchProvider);
     bool isLoading = ref.watch(isLoadingRpcSearchResultsProvider);
