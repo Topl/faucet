@@ -1,0 +1,350 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:faucet/chain/providers/selected_chain_provider.dart';
+import 'package:faucet/shared/constants/strings.dart';
+import 'package:faucet/shared/theme.dart';
+import 'package:faucet/transactions/widgets/custom_transaction_widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import '../models/chains.dart';
+import '../../shared/utils/theme_color.dart';
+import '../models/currency.dart';
+
+/// A widget that displays a dropdown button for selecting a chain name.
+class AddNewNetworkContainer extends ConsumerStatefulWidget {
+  const AddNewNetworkContainer({Key? key, required this.colorTheme}) : super(key: key);
+  final ThemeMode colorTheme;
+  @override
+  _AddNewNetworkState createState() => _AddNewNetworkState();
+}
+
+class _AddNewNetworkState extends ConsumerState<AddNewNetworkContainer> {
+  /// isCDropDownOpen is used to check if the dropdown is open or not
+  bool isCDropDownOpen = false;
+
+  /// validate is used to validate the input field
+  bool validate = false;
+
+  /// selectedCurrencyValue is used to store the selected value from the dropdown
+  String? selectedCurrencyValue = 'LVL';
+
+  Map<String, TextEditingController> textEditingControllers = {
+    'networkName': TextEditingController(text: 'Topl Mainnet'),
+    'networkUrl': TextEditingController(text: ''),
+    'chainId': TextEditingController(text: '192.158.0.0'),
+    'explorerUrl': TextEditingController(text: ''),
+  };
+  final TextEditingController textEditingController = TextEditingController();
+  final toast = FToast();
+  @override
+  void initState() {
+    super.initState();
+    toast.init(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
+    final isTablet = ResponsiveBreakpoints.of(context).equals(TABLET);
+
+    return Container(
+      decoration: BoxDecoration(color: getSelectedColor(widget.colorTheme, 0xFFFFFFFF, 0xFF282A2C)),
+      child: Padding(
+        padding: EdgeInsets.all(isMobile ? 16.0 : 40.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Strings.addNewNetwork, style: headlineLarge(context)),
+            const SizedBox(
+              height: 48,
+            ),
+            Container(
+              height: 64,
+              width: 560,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: const Color.fromRGBO(112, 64, 236, 0.04),
+                border: Border.all(
+                  color: getSelectedColor(widget.colorTheme, 0xFFE0E0E0, 0xFF858E8E),
+                ),
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 16),
+                  Icon(
+                    Icons.warning_amber,
+                    color: getSelectedColor(widget.colorTheme, 0xFF7040EC, 0xFF858E8E),
+                    size: 24,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: SizedBox(
+                      width: 450,
+                      child: Text(Strings.networkInfoMessage,
+                          style: bodySmall(context)?.copyWith(
+                            color: getSelectedColor(widget.colorTheme, 0xFF7040EC, 0xFF858E8E),
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 48,
+            ),
+            TextField(
+              controller: textEditingControllers['networkName'],
+              style: customTextFieldStyle(),
+              decoration: InputDecoration(
+                labelText: Strings.networkName,
+                labelStyle: customTextStyle(),
+                border: customOutlineInputBorder(),
+                enabledBorder: customOutlineInputBorder(),
+                focusedBorder: customOutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(
+              height: 24,
+            ),
+            TextField(
+              controller: textEditingControllers['networkUrl'],
+              style: customTextFieldStyle(),
+              decoration: InputDecoration(
+                labelText: Strings.rpcUrl,
+                labelStyle: bodySmall(context),
+                border: customOutlineInputBorder(),
+                enabledBorder: customOutlineInputBorder(),
+                focusedBorder: customOutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            SizedBox(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    validate ? "This field is required" : '',
+                    style: const TextStyle(fontSize: 14, fontFamily: 'Rational Display', color: Color(0xFFF07575)),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            TextField(
+              controller: textEditingControllers['chainId'],
+              style: customTextFieldStyle(),
+              decoration: InputDecoration(
+                labelText: Strings.chainId,
+                suffixIcon: Tooltip(
+                  message: Strings.chainIdIdentifierMsg,
+                  showDuration: const Duration(seconds: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.9),
+                    borderRadius: const BorderRadius.all(Radius.circular(4)),
+                  ),
+                  child: const Icon(
+                    Icons.info_outline,
+                    color: Color(0xFF858E8E),
+                  ),
+                ),
+                labelStyle: customTextStyle(),
+                border: customOutlineInputBorder(),
+                enabledBorder: customOutlineInputBorder(),
+                focusedBorder: customOutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(
+              height: 24,
+            ),
+            DropdownButton2(
+              hint: Text(
+                Strings.selectANetwork,
+                style: bodyMedium(context),
+              ),
+              style: customTextStyle(),
+              underline: Container(
+                height: 0,
+              ),
+              buttonStyleData: ButtonStyleData(
+                height: 56,
+                width: 560,
+                padding: const EdgeInsets.only(left: 14, right: 14),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(
+                    color: getSelectedColor(widget.colorTheme, 0xFFC0C4C4, 0xFF4B4B4B),
+                  ),
+                  color: getSelectedColor(widget.colorTheme, 0xFFFEFEFE, 0xFF282A2C),
+                ),
+              ),
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 200,
+                decoration: BoxDecoration(
+                  color: getSelectedColor(widget.colorTheme, 0xFFFEFEFE, 0xFF282A2C),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(8.0),
+                    bottomRight: Radius.circular(8.0),
+                  ),
+                ),
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                height: 40,
+              ),
+              iconStyleData: IconStyleData(
+                icon: isCDropDownOpen
+                    ? const Icon(
+                        Icons.keyboard_arrow_up,
+                        color: Color(0xFF858E8E),
+                      )
+                    : const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Color(0xFF858E8E),
+                      ),
+                iconSize: 20,
+              ),
+              value: selectedCurrencyValue,
+              // Array list of items
+              items: currencies.map((String items) {
+                return DropdownMenuItem(
+                  value: items,
+                  child: Text(items),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedCurrencyValue = value as String;
+                });
+              },
+              onMenuStateChange: (isOpen) {
+                setState(() {
+                  isCDropDownOpen = !isCDropDownOpen;
+                });
+              },
+            ),
+            const SizedBox(
+              height: 24,
+            ),
+            TextField(
+              controller: textEditingControllers['explorerUrl'],
+              style: customTextFieldStyle(),
+              decoration: InputDecoration(
+                hintText: Strings.blockExplorerUrl,
+                hintStyle: customTextStyle(),
+                border: customOutlineInputBorder(),
+                enabledBorder: customOutlineInputBorder(),
+                focusedBorder: customOutlineInputBorder(),
+              ),
+            ),
+            SizedBox(
+              height: !isMobile ? 48 : null,
+            ),
+            Container(
+              padding: const EdgeInsets.only(top: 64.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      width: isMobile ? 100 : 272,
+                      height: 56,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(Strings.cancelText, style: bodyMedium(context)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      width: isMobile ? 100 : 272,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final urlList = splitUrl(completeUrl: textEditingControllers['networkUrl']!.text);
+                          Currency currencyEnum = convertStringToCurrency(currencyString: selectedCurrencyValue!);
+                          final newChain = Chains.custom(
+                            chainId: textEditingControllers['chainId']!.text,
+                            networkName: textEditingControllers['networkName']!.text,
+                            hostUrl: urlList[0],
+                            port: urlList[1],
+                            currency: currencyEnum,
+                          );
+
+                          await ref.read(chainsProvider.notifier).addCustomChain(chain: newChain as CustomNetwork);
+
+                          ref.read(selectedChainProvider.notifier).state = newChain;
+                          toast.showToast(
+                              child: CustomToast(
+                                  colorTheme: widget.colorTheme, isSuccess: true, cancel: () => Fluttertoast.cancel()),
+                              toastDuration: const Duration(seconds: 4),
+                              positionedToastBuilder: (context, child) => Positioned(
+                                    top: 30,
+                                    left: isTablet ? 70 : 0,
+                                    right: 0,
+                                    child: child,
+                                  ));
+                          if (!mounted) return;
+                          //remove dropdown from screen
+                          final nav = Navigator.of(context);
+                          nav.pop();
+                          nav.pop();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF0DC8D4)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                        ),
+                        child: Text(Strings.addText, style: bodyMedium(context)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextStyle customTextFieldStyle() {
+    return TextStyle(
+        fontSize: 16,
+        fontFamily: 'Rational Display',
+        color: getSelectedColor(widget.colorTheme, 0xFF535757, 0xFF858E8E));
+  }
+
+  TextStyle customTextStyle() {
+    return const TextStyle(
+      fontSize: 16,
+      fontFamily: 'Rational Display',
+      color: Color(0xFF858E8E),
+    );
+  }
+
+  OutlineInputBorder customOutlineInputBorder() {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: outlineBorder(),
+    );
+  }
+
+  BorderSide outlineBorder() {
+    return BorderSide(
+      color: getSelectedColor(widget.colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+    );
+  }
+}
