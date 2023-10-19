@@ -139,6 +139,7 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
       }
       return blocks;
     }
+
     try {
       final genusClient = ref.read(genusProvider(selectedChain));
 
@@ -277,6 +278,7 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
     int depth = 0;
     final genusClient = ref.read(genusProvider(selectedChain));
     var nextBlock = await genusClient.getBlockByDepth(depth: depth);
+
     //check that block has transactions
     while (!nextBlock.block.fullBody.hasField(1)) {
       depth++;

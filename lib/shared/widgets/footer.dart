@@ -21,8 +21,6 @@ class Footer extends HookConsumerWidget {
     final isDesktop = ResponsiveBreakpoints.of(context).equals(DESKTOP);
     final isDesktopAndTab = ResponsiveBreakpoints.of(context).between(TABLET, DESKTOP);
 
-    final currentWidth = MediaQuery.of(context).size.width;
-
     final colorTheme = ref.watch(appThemeColorProvider);
     return Column(
       children: [
@@ -45,41 +43,55 @@ class Footer extends HookConsumerWidget {
         const SizedBox(
           height: 20,
         ),
-        Padding(
+        Container(
           padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
             children: [
               if (isDesktopAndTab)
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    FooterBottomLinks(text: Strings.footerPrivacyPolicy),
-                    SizedBox(width: 15),
-                    FooterBottomLinks(text: Strings.footerTermsOfUse),
-                    SizedBox(width: 15),
-                    FooterBottomLinks(text: Strings.footerCookiePolicy),
-                    SizedBox(width: 15),
-                    FooterBottomLinks(text: Strings.footerCookiePreferences),
-                  ],
-                ),
-              if (isDesktopAndTab)
-                const Expanded(
-                  child: SizedBox(),
-                ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const FooterBottomLinks(text: Strings.footerRightsReserved),
-                  const SizedBox(width: 15),
-                  SvgPicture.asset(
-                    colorTheme == ThemeMode.light ? 'assets/icons/logo.svg' : 'assets/icons/logo_dark.svg',
-                    width: 32,
-                    height: 20,
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    width: 350,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          FooterBottomLinks(text: Strings.footerPrivacyPolicy),
+                          SizedBox(width: 15),
+                          FooterBottomLinks(text: Strings.footerTermsOfUse),
+                          SizedBox(width: 15),
+                          FooterBottomLinks(text: Strings.footerCookiePolicy),
+                          SizedBox(width: 15),
+                          FooterBottomLinks(text: Strings.footerCookiePreferences),
+                        ],
+                      ),
+                    ),
                   ),
-                ],
+                ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: SizedBox(
+                  width: 160,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const FooterBottomLinks(text: Strings.footerRightsReserved),
+                        const SizedBox(width: 15),
+                        SvgPicture.asset(
+                          colorTheme == ThemeMode.light ? 'assets/icons/logo.svg' : 'assets/icons/logo_dark.svg',
+                          width: 32,
+                          height: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -124,6 +136,7 @@ class FooterBottomLinks extends HookConsumerWidget {
     return Text(
       text,
       style: bodySmall(context),
+      textAlign: TextAlign.center,
     );
   }
 }

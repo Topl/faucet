@@ -8,10 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SearchResults extends HookConsumerWidget {
+  static const searchResultsKey = Key('searchResultsKey');
   final Function(SearchResult) resultSelected;
   const SearchResults({
     required this.resultSelected,
-    Key? key,
+    Key key = searchResultsKey,
   }) : super(key: key);
 
   @override

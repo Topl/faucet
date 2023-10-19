@@ -15,6 +15,7 @@ import '../../shared/utils/theme_color.dart';
 
 /// A custom search bar widget that displays a search bar and a list of
 class CustomSearchBar extends HookConsumerWidget {
+  static const searchKey = Key('searchKey');
   const CustomSearchBar({
     Key? key,
     required this.onSearch,
@@ -130,6 +131,7 @@ class CustomSearchBar extends HookConsumerWidget {
         children: [
           Expanded(
             child: TextField(
+              key: searchKey,
               style: bodyMedium(context),
               controller: searchController,
               onSubmitted: (_) {
