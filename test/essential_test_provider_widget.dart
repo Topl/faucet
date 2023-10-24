@@ -16,35 +16,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'mocks/genus_mocks.dart';
 import 'mocks/hive_mocks.dart';
 import 'mocks/node_config_mocks.dart';
-
-// Project imports:
-
-class TestAssetBundle extends CachingAssetBundle {
-  @override
-  Future<String> loadString(String key, {bool cache = true}) async {
-    final ByteData data = await load(key);
-    return utf8.decode(data.buffer.asUint8List());
-  }
-
-  @override
-  Future<ByteData> load(String key) async => rootBundle.load(key);
-}
-
-Future<void> main({
-  List<Override> overrides = const [],
-}) async {
-  runApp(DefaultAssetBundle(
-    bundle: TestAssetBundle(),
-    child: await essentialTestProviderWidget(overrides: overrides),
-  ));
-}
+import 'required_test_class.dart';
 
 /// The entire application, wrapped in a [ProviderScope].
 /// This function exposts a named parameter called [overrides]
 /// which is fed forward to the [ProviderScope].
 Future<Widget> essentialTestProviderWidget({
   List<Override> overrides = const [],
+  required WidgetTester tester,
+  required TestScreenSizes testScreenSize,
 }) async {
+  tester.binding.setSurfaceSize(testScreenSize.size);
+
   overrides = [
     genusProvider.overrideWith((ref, arg) => getMockGenus()),
     hivePackageProvider.overrideWithValue(getMockHive()),
@@ -64,4 +47,15 @@ Future<Widget> essentialTestProviderWidget({
       ),
     ),
   );
+}
+
+class TestAssetBundle extends CachingAssetBundle {
+  @override
+  Future<String> loadString(String key, {bool cache = true}) async {
+    final ByteData data = await load(key);
+    return utf8.decode(data.buffer.asUint8List());
+  }
+
+  @override
+  Future<ByteData> load(String key) async => rootBundle.load(key);
 }
