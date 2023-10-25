@@ -121,7 +121,7 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
   ) : super(
           const AsyncLoading(),
         ) {
-    getLatestBlocks(setState: true);
+    // getLatestBlocks(setState: true);
   }
 
   /// It takes a bool [setState]
@@ -142,6 +142,7 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
 
     try {
       final genusClient = ref.read(genusProvider(selectedChain));
+      print('QQQQ genusClient: $genusClient');
 
       if (setState) state = const AsyncLoading();
       //futures
@@ -150,6 +151,7 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
       final presentConfig = await config;
 
       final block0Res = await genusClient.getBlockByDepth(depth: 0);
+      print('QQQQ block0Res: $block0Res');
       blocks.add(
         Block.fromBlockRes(
           blockRes: block0Res,
@@ -172,7 +174,7 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
       if (setState) {
         state = AsyncData(blocks.asMap());
       }
-
+      print('QQQQ blocks: $blocks');
       return blocks;
     } catch (e) {
       throw Exception('Error in blockProvider: $e');
@@ -282,6 +284,7 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
     //check that block has transactions
     while (!nextBlock.block.fullBody.hasField(1)) {
       depth++;
+      print('QQQQ depth: $depth');
       nextBlock = await genusClient.getBlockByDepth(depth: depth);
     }
 
