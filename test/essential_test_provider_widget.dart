@@ -26,7 +26,9 @@ Future<Widget> essentialTestProviderWidget({
   required WidgetTester tester,
   required TestScreenSizes testScreenSize,
 }) async {
-  tester.binding.setSurfaceSize(testScreenSize.size);
+  // Set the size of the view
+  tester.view.physicalSize = testScreenSize.size;
+  tester.view.devicePixelRatio = 1.0;
 
   overrides = [
     genusProvider.overrideWith((ref, arg) => getMockGenus()),
@@ -34,7 +36,6 @@ Future<Widget> essentialTestProviderWidget({
     nodeProvider.overrideWith((ref, arg) => getMockNodeGRPCService()),
     ...overrides,
   ];
-  TestWidgetsFlutterBinding.ensureInitialized();
 
   return ProviderScope(
     overrides: overrides,
