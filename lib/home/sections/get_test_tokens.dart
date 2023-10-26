@@ -20,7 +20,8 @@ List<String> networks = [
 ];
 
 class GetTestTokens extends HookConsumerWidget {
-  GetTestTokens({Key? key, required this.colorTheme}) : super(key: key);
+  static const getTestTokensKey = Key('getTestTokensKey');
+  GetTestTokens({Key key = getTestTokensKey, required this.colorTheme}) : super(key: key);
   final TextEditingController textWalletEditingController = TextEditingController();
   final ThemeMode colorTheme;
   final toast = FToast();
@@ -88,6 +89,7 @@ class GetTestTokens extends HookConsumerWidget {
               height: 48,
             ),
             TextField(
+              key: const Key('lvlInput'),
               controller: TextEditingController(text: 'LVL'),
               enabled: false,
               style: bodyMedium(context),
@@ -118,6 +120,7 @@ class GetTestTokens extends HookConsumerWidget {
               height: 24,
             ),
             DropdownButton2(
+              key: const Key('selectNetwork'),
               hint: const Text(
                 'Select a Network',
                 style: TextStyle(
@@ -187,6 +190,7 @@ class GetTestTokens extends HookConsumerWidget {
             ),
             TextField(
               // TODO: Add to accept the address format only
+              key: const Key('address'),
               controller: textWalletEditingController,
               style: bodyMedium(context),
               decoration: InputDecoration(

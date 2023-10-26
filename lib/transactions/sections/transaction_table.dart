@@ -67,6 +67,7 @@ class _TransactionTableScreenState extends ConsumerState<TransactionTableScreen>
                                       color: const Color(0xFF0DC8D4),
                                     ),
                                     child: TextButton(
+                                      key: const Key("requestTokens"),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                         showModalSideSheet(
