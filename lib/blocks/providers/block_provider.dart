@@ -286,6 +286,7 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
       depth++;
       print('QQQQ depth: $depth');
       nextBlock = await genusClient.getBlockByDepth(depth: depth);
+      print('QQQQ nextBlock Transactions: ${nextBlock.block.fullBody.transactions}');
     }
 
     return nextBlock;
