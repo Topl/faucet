@@ -171,19 +171,16 @@ class TransactionsNotifier extends StateNotifier<AsyncValue<List<Transaction>>> 
       if (setState) state = AsyncData(transactions);
       return transactions;
     } else {
-      print('QQQQ getting transactions');
       if (setState) state = const AsyncLoading();
       final List<Transaction> transactions = [];
       //get first populated block
 
       var latestBlockRes = await ref.read(blockProvider.notifier).getFirstPopulatedBlock();
-      print('QQQQ latestBlockRes: $latestBlockRes');
 
       final config = ref.read(configProvider.future);
       final presentConfig = await config;
 
       int transactionCount = latestBlockRes.block.fullBody.transactions.length;
-      print('QQQQ transactionCount: $transactionCount');
 
       var latestBlock = Block(
         header: decodeId(latestBlockRes.block.header.headerId.value),
@@ -226,7 +223,6 @@ class TransactionsNotifier extends StateNotifier<AsyncValue<List<Transaction>>> 
       if (setState) {
         state = AsyncData(transactions);
       }
-      print('QQQQ transactions: $transactions');
       return transactions;
     }
   }
