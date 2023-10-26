@@ -9,7 +9,7 @@ import 'hive_mocks.mocks.dart';
 HiveInterface getMockHive() {
   MockHiveInterface mockHive = MockHiveInterface();
 
-  HivesBox.values.forEach((element) {
+  for (var element in HivesBox.values) {
     switch (element) {
       case HivesBox.customChains:
         when(mockHive.openBox(HivesBox.customChains.id)).thenAnswer((_) async {
@@ -22,11 +22,7 @@ HiveInterface getMockHive() {
         });
         break;
     }
-
-    when(mockHive.openBox(any)).thenAnswer((_) async {
-      return MockBox();
-    });
-  });
+  }
 
   return mockHive;
 }
