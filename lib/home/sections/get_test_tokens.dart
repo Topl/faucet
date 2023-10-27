@@ -20,7 +20,8 @@ List<String> networks = [
 ];
 
 class GetTestTokens extends HookConsumerWidget {
-  GetTestTokens({Key? key, required this.colorTheme}) : super(key: key);
+  static const getTestTokensKey = Key('getTestTokenKey');
+  GetTestTokens({Key key = getTestTokensKey, required this.colorTheme}) : super(key: key);
   final TextEditingController textWalletEditingController = TextEditingController();
   final ThemeMode colorTheme;
   final toast = FToast();

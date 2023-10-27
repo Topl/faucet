@@ -17,6 +17,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 class TransactionTableScreen extends StatefulHookConsumerWidget {
   const TransactionTableScreen({Key? key}) : super(key: key);
   static const String route = '/transactions';
+  static const Key requestTokenButtonKey = Key('requestTokensButton');
   @override
   _TransactionTableScreenState createState() => _TransactionTableScreenState();
 }
@@ -67,7 +68,9 @@ class _TransactionTableScreenState extends ConsumerState<TransactionTableScreen>
                                       color: const Color(0xFF0DC8D4),
                                     ),
                                     child: TextButton(
+                                      key: TransactionTableScreen.requestTokenButtonKey,
                                       onPressed: () {
+                                        print("here");
                                         Navigator.of(context).pop();
                                         showModalSideSheet(
                                           context: context,
