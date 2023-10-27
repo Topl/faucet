@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../essential_test_provider_widget.dart';
 import '../mocks/genus_mocks.dart';
+import '../required_test_class.dart';
 
 void main() {
   group(
@@ -15,6 +16,8 @@ void main() {
         (WidgetTester tester) async {
           await tester.pumpWidget(
             await essentialTestProviderWidget(
+              tester: tester,
+              testScreenSize: TestScreenSizes.desktop,
               overrides: [
                 genusProvider.overrideWith(
                   (ref, arg) => getMockGenus(),
