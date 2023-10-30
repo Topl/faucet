@@ -1,29 +1,41 @@
+import 'package:faucet/transactions/sections/transaction_table.dart';
 import 'package:faucet/home/sections/get_test_tokens.dart';
-import 'package:flutter/material.dart';
-
-import 'package:faucet/shared/providers/node_provider.dart';
-import 'package:faucet/shared/utils/decode_id.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../essential_test_provider_widget.dart';
-import 'utils/mock_node_utils.dart';
+import '../required_test_class.dart';
+import './required_request_tests.dart';
+import '../utils/tester_utils.dart';
 
-void main() {
-  group('Requests Tests', () {
-    testWidgets('Should show confirmation text request is made', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        await essentialTestProviderWidget(
-          overrides: [nodeProvider.overrideWith((ref, arg) => getMockRequestsNode())],
-        ),
-      );
-      await tester.pumpAndSettle();
+void main() async {
+  final requestsTests = RequiredRequestsTests(
+    menuOpened: (testScreenSize) => menuOpened(testScreenSize),
+    testScreenSize: TestScreenSizes.desktop,
+  );
 
-      var button = find.byKey(const Key('requestTokens'));
-      expect(button, findsOneWidget);
-      await tester.tap(button);
-      await tester.pumpAndSettle();
+  await requestsTests.runTests();
+}
 
-      expect(find.byKey(const Key('getTestTokensKey')), findsOneWidget);
-    });
+Future<void> menuOpened(TestScreenSizes testScreenSize) async {
+  testWidgets('Request tokens menu should appear', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      await essentialTestProviderWidget(
+        tester: tester,
+        testScreenSize: testScreenSize,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final scrollable = find.byKey(const Key("transactionTableKey"));
+    expect(scrollable, findsOneWidget);
+    var button = find.byKey(TransactionTableScreen.requestTokensKey);
+    await tester.ensureVisible(button);
+    expect(button, findsOneWidget);
+
+    await tester.tap(button);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    expect(find.byKey(GetTestTokens.getTestTokensKey), findsOneWidget);
   });
 }

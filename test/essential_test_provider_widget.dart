@@ -3,6 +3,7 @@ import 'dart:convert';
 
 // Flutter imports:
 import 'package:faucet/main.dart';
+import 'package:faucet/shared/constants/ui.dart';
 import 'package:faucet/shared/providers/genus_provider.dart';
 import 'package:faucet/shared/providers/node_provider.dart';
 import 'package:faucet/shared/services/hive/hive_service.dart';
@@ -12,6 +13,8 @@ import 'package:flutter/services.dart';
 // Package imports:
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:responsive_framework/breakpoint.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 import 'mocks/genus_mocks.dart';
 import 'mocks/hive_mocks.dart';
@@ -37,14 +40,32 @@ Future<Widget> essentialTestProviderWidget({
     ...overrides,
   ];
 
+  // return ProviderScope(
+  //   overrides: overrides,
+  //   // child: const ResponsiveBreakPointsWrapper(),
+  //   child: MaterialApp(
+  //     debugShowCheckedModeBanner: false,
+  //     home: DefaultAssetBundle(
+  //       bundle: TestAssetBundle(),
+  //       child: const ResponsiveBreakPointsWrapper(),
+  //     ),
+  //   ),
+  // );
+  // Define your breakpoints
   return ProviderScope(
     overrides: overrides,
-    // child: const ResponsiveBreakPointsWrapper(),
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DefaultAssetBundle(
-        bundle: TestAssetBundle(),
-        child: const ResponsiveBreakPointsWrapper(),
+      home: ResponsiveBreakpoints.builder(
+        // Adjust the following part according to the actual signature of ResponsiveBreakpoints.builder in your setup
+        breakpoints: const [
+          Breakpoint(start: 0, end: mobileBreak, name: MOBILE),
+          Breakpoint(start: mobileBreak + 1, end: tabletBreak, name: TABLET),
+          Breakpoint(start: tabletBreak + 1, end: double.infinity, name: DESKTOP),
+        ],
+        // Assuming that builder here expects a child which should be your app's main widget or screen
+        child:
+            const ResponsiveBreakPointsWrapper(), // this should be the root widget of your app or the entry point for your tests
       ),
     ),
   );
