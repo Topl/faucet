@@ -221,9 +221,7 @@ class TransactionsNotifier extends StateNotifier<AsyncValue<List<Transaction>>> 
         );
       }
       if (setState) {
-        Future.delayed(const Duration(seconds: 1), () {
-          state = AsyncData(transactions);
-        });
+        state = AsyncData(transactions);
       }
       return transactions;
     }

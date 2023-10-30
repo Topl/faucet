@@ -121,7 +121,8 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
   ) : super(
           const AsyncLoading(),
         ) {
-    getLatestBlocks(setState: true);
+    // Commented out for now since blocks are not needed for the faucet
+    // getLatestBlocks(setState: true);
   }
 
   /// It takes a bool [setState]
@@ -172,7 +173,6 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
       if (setState) {
         state = AsyncData(blocks.asMap());
       }
-
       return blocks;
     } catch (e) {
       throw Exception('Error in blockProvider: $e');

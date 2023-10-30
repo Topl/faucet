@@ -1,7 +1,7 @@
 import 'package:mockito/mockito.dart';
 import 'package:topl_common/genus/services/transaction_grpc.dart';
 
-import '../../mocks/genus_mocks.mocks.dart';
+import '../../shared/mocks/genus_mocks.mocks.dart';
 import '../../utils/block_utils.dart';
 
 GenusGRPCService getMockSearchGenus({

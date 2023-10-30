@@ -13,10 +13,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'mocks/genus_mocks.dart';
-import 'mocks/hive_mocks.dart';
-import 'mocks/node_config_mocks.dart';
 import 'required_test_class.dart';
+import 'shared/mocks/genus_mocks.dart';
+import 'shared/mocks/hive_mocks.dart';
+import 'shared/mocks/node_config_mocks.dart';
 
 /// The entire application, wrapped in a [ProviderScope].
 /// This function exposts a named parameter called [overrides]

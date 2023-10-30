@@ -22,5 +22,5 @@ Chain getMockChain() {
 }
 
 Chains getDefaultChain() {
-  return kDebugMode ? const Chains.private_network() : const Chains.topl_mainnet();
+  return kDebugMode ? const Chains.dev_network() : const Chains.topl_mainnet();
 }
