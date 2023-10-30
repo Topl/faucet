@@ -20,12 +20,15 @@ void main() async {
 }
 
 class ResponsiveBreakPointsWrapper extends StatelessWidget {
-  const ResponsiveBreakPointsWrapper({Key? key}) : super(key: key);
+  final Widget? child;
+  const ResponsiveBreakPointsWrapper({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final targetChild = child ?? const FaucetRouter();
+
     return ResponsiveBreakpoints.builder(
-      child: const FaucetRouter(),
+      child: targetChild,
       breakpoints: const [
         Breakpoint(start: 0, end: mobileBreak, name: MOBILE),
         Breakpoint(start: mobileBreak + 1, end: tabletBreak, name: TABLET),

@@ -175,9 +175,7 @@ class TransactionsNotifier extends StateNotifier<AsyncValue<List<Transaction>>> 
       final List<Transaction> transactions = [];
       //get first populated block
 
-      print('QQQQ before latest block');
       var latestBlockRes = await ref.read(getFirstPopulatedBlockProvider(selectedChain).future);
-      print('QQQQ after latest block');
 
       final config = ref.read(configProvider.future);
       final presentConfig = await config;

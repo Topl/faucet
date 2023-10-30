@@ -1,3 +1,4 @@
+import 'package:faucet/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -64,10 +65,12 @@ class Header extends HookConsumerWidget {
                         onPressed: () {
                           showGeneralDialog(
                             context: context,
-                            pageBuilder: (context, _, __) => MobileMenu(
-                              onSwitchChange: () {
-                                ref.read(appThemeColorProvider.notifier).toggleTheme();
-                              },
+                            pageBuilder: (context, _, __) => ResponsiveBreakPointsWrapper(
+                              child: MobileMenu(
+                                onSwitchChange: () {
+                                  ref.read(appThemeColorProvider.notifier).toggleTheme();
+                                },
+                              ),
                             ),
                             barrierDismissible: true,
                             transitionDuration: const Duration(milliseconds: 250),
