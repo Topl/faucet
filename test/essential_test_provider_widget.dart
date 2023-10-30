@@ -40,32 +40,17 @@ Future<Widget> essentialTestProviderWidget({
     ...overrides,
   ];
 
-  // return ProviderScope(
-  //   overrides: overrides,
-  //   // child: const ResponsiveBreakPointsWrapper(),
-  //   child: MaterialApp(
-  //     debugShowCheckedModeBanner: false,
-  //     home: DefaultAssetBundle(
-  //       bundle: TestAssetBundle(),
-  //       child: const ResponsiveBreakPointsWrapper(),
-  //     ),
-  //   ),
-  // );
-  // Define your breakpoints
   return ProviderScope(
     overrides: overrides,
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
       home: ResponsiveBreakpoints.builder(
-        // Adjust the following part according to the actual signature of ResponsiveBreakpoints.builder in your setup
         breakpoints: const [
           Breakpoint(start: 0, end: mobileBreak, name: MOBILE),
           Breakpoint(start: mobileBreak + 1, end: tabletBreak, name: TABLET),
           Breakpoint(start: tabletBreak + 1, end: double.infinity, name: DESKTOP),
         ],
-        // Assuming that builder here expects a child which should be your app's main widget or screen
-        child:
-            const ResponsiveBreakPointsWrapper(), // this should be the root widget of your app or the entry point for your tests
+        child: const ResponsiveBreakPointsWrapper(),
       ),
     ),
   );

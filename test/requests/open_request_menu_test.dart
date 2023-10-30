@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import '../essential_test_provider_widget.dart';
 import '../required_test_class.dart';
 import './required_request_tests.dart';
-import '../utils/tester_utils.dart';
 
 void main() async {
   final requestsTests = RequiredRequestsTests(
