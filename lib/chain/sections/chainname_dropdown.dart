@@ -16,6 +16,7 @@ import 'package:modal_side_sheet/modal_side_sheet.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class ChainNameDropDown extends HookConsumerWidget {
+  static const Key desktopDropDownKey = Key('desktopDropDownKey');
   final ThemeMode colorTheme;
   final void Function()? onItemSelected;
 
@@ -50,6 +51,7 @@ class ChainNameDropDown extends HookConsumerWidget {
                 isDropDownOpen: isDropDownOpen,
               )
             : _DesktopDropdown(
+                key: desktopDropDownKey,
                 chains: chains,
                 selectedChain: selectedChain,
                 colorTheme: colorTheme,
@@ -279,17 +281,20 @@ class _DesktopDropdown extends StatelessWidget {
             ...chains
                 .map(
                   (Chains chain) => DropdownMenuItem(
+                    key: Key(chain.key),
                     value: chain,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Row(
                         children: [
-                          Tooltip(
+                          Expanded(
+                            child: Tooltip(
                               message: chain.networkName.length > 8 ? chain.networkName : '',
                               child: CustomItem(
-                                name: shortenNetwork(chain),
-                              )),
-                          const Spacer(),
+                                name: chain.networkName,
+                              ),
+                            ),
+                          ),
                           Icon(
                             Icons.check,
                             color: const Color(0xFF7040EC),
@@ -329,6 +334,7 @@ class _DesktopDropdown extends StatelessWidget {
           value: selectedChain,
           selectedItemBuilder: (context) => chains
               .map((Chains chain) => Row(
+                    key: Key(chain.key),
                     children: [
                       Expanded(
                         child: Text(
@@ -414,6 +420,7 @@ class CustomItem extends StatelessWidget {
     return Text(
       name,
       style: bodyMedium(context),
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

@@ -9,6 +9,7 @@ import '../utils/theme_color.dart';
 
 /// Header widget that displays the logo, search bar and dropdown.
 class Header extends HookConsumerWidget {
+  static const Key menuKey = Key('menuKey');
   final String logoAsset;
   final VoidCallback onSearch;
   final ValueChanged<String> onDropdownChanged;
@@ -59,8 +60,8 @@ class Header extends HookConsumerWidget {
               isSmallerThanOrEqualToTablet
                   ? SizedBox(
                       child: IconButton(
+                        key: menuKey,
                         onPressed: () {
-                          // toggle between light and dark theme
                           showGeneralDialog(
                             context: context,
                             pageBuilder: (context, _, __) => MobileMenu(

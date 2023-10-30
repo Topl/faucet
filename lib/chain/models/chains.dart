@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:faucet/chain/models/currency.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chains.freezed.dart';
@@ -12,26 +13,31 @@ sealed class Chains with _$Chains {
     @Default('Toplnet') String networkName,
     @Default('mainnet.topl.co') String hostUrl,
     @Default(443) int port,
+    @Default('toplnetKey') String key,
   }) = ToplMainnet;
   const factory Chains.valhalla_testnet({
     @Default('Valhalla') String networkName,
     @Default('testnet.topl.network') String hostUrl,
     @Default(50051) int port,
+    @Default('valhallaKey') String key,
   }) = ValhallaTestNet;
   const factory Chains.private_network({
     @Default('Private') String networkName,
     @Default('localhost') String hostUrl,
     @Default(8080) int port,
+    @Default('privateKey') String key,
   }) = PrivateNetwork;
   const factory Chains.dev_network({
     @Default('Development') String networkName,
     @Default('testnet.topl.tech') String hostUrl,
     @Default(443) int port,
+    @Default('devKey') String key,
   }) = DevNetwork;
   const factory Chains.mock({
     @Default('Mock') String networkName,
     @Default('mock') String hostUrl,
     @Default(0000) int port,
+    @Default('mockKey') String key,
   }) = MockNetwork;
   const factory Chains.custom({
     required String chainId,
@@ -40,6 +46,7 @@ sealed class Chains with _$Chains {
     required int port,
     required Currency currency,
     String? blockExplorerUrl,
+    @Default('customKey') String key,
   }) = CustomNetwork;
 
   factory Chains.fromJson(Map<String, dynamic> json) => _$ChainsFromJson(json);
