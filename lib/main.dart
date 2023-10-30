@@ -3,15 +3,12 @@ import 'package:faucet/shared/constants/ui.dart';
 import 'package:faucet/shared/providers/app_theme_provider.dart';
 import 'package:faucet/shared/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vrouter/vrouter.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-void main() async {
-  await Hive.initFlutter();
-
+void main() {
   runApp(
     const ProviderScope(
       child: ResponsiveBreakPointsWrapper(),
@@ -20,12 +17,15 @@ void main() async {
 }
 
 class ResponsiveBreakPointsWrapper extends StatelessWidget {
-  const ResponsiveBreakPointsWrapper({Key? key}) : super(key: key);
+  final Widget? child;
+  const ResponsiveBreakPointsWrapper({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final targetChild = child ?? const FaucetRouter();
+
     return ResponsiveBreakpoints.builder(
-      child: const FaucetRouter(),
+      child: targetChild,
       breakpoints: const [
         Breakpoint(start: 0, end: mobileBreak, name: MOBILE),
         Breakpoint(start: mobileBreak + 1, end: tabletBreak, name: TABLET),

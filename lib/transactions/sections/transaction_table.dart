@@ -13,9 +13,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:modal_side_sheet/modal_side_sheet.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../main.dart';
+
 /// This is a custom widget that shows the transaction table screen
 class TransactionTableScreen extends StatefulHookConsumerWidget {
   const TransactionTableScreen({Key? key}) : super(key: key);
+  static const requestTokensKey = Key("requestTokens");
   static const String route = '/transactions';
   static const Key requestTokenButtonKey = Key('requestTokensButton');
   @override
@@ -48,6 +51,7 @@ class _TransactionTableScreenState extends ConsumerState<TransactionTableScreen>
                           left: isMobile ? 16.0 : 40.0, right: isMobile ? 0 : 40.0, top: 8.0, bottom: 80.0),
                       height: isTablet ? MediaQuery.of(context).size.height - 435 : null,
                       child: SingleChildScrollView(
+                        key: const Key("transactionTableKey"),
                         child: Theme(
                           data: Theme.of(context).copyWith(
                             cardColor: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
@@ -68,9 +72,8 @@ class _TransactionTableScreenState extends ConsumerState<TransactionTableScreen>
                                       color: const Color(0xFF0DC8D4),
                                     ),
                                     child: TextButton(
-                                      key: TransactionTableScreen.requestTokenButtonKey,
+                                      key: TransactionTableScreen.requestTokensKey,
                                       onPressed: () {
-                                        print("here");
                                         Navigator.of(context).pop();
                                         showModalSideSheet(
                                           context: context,
@@ -78,8 +81,14 @@ class _TransactionTableScreenState extends ConsumerState<TransactionTableScreen>
                                           width: 640,
                                           barrierColor: Colors.white.withOpacity(barrierOpacity),
                                           barrierDismissible: true,
-                                          body: GetTestTokens(
-                                            colorTheme: colorTheme,
+                                          // body: GetTestTokens(
+                                          //   colorTheme: colorTheme,
+                                          // ),
+                                          body: ResponsiveBreakPointsWrapper(
+                                            child: GetTestTokens(
+                                              // Assuming this is the content you want to display
+                                              colorTheme: colorTheme,
+                                            ),
                                           ),
                                         );
                                       },

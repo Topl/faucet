@@ -9,6 +9,7 @@ import 'package:topl_common/proto/brambl/models/transaction/io_transaction.pb.da
 import 'package:topl_common/proto/brambl/models/transaction/schedule.pb.dart';
 import 'package:topl_common/proto/brambl/models/transaction/spent_transaction_output.pb.dart';
 import 'package:topl_common/proto/brambl/models/transaction/unspent_transaction_output.pb.dart';
+import 'package:topl_common/proto/node/services/bifrost_rpc.pb.dart';
 import 'package:topl_common/proto/quivr/models/shared.pb.dart';
 
 getMockIoTransaction({
@@ -37,6 +38,10 @@ getMockIoTransaction({
     ],
     transactionId: _getTransactionId(id),
   );
+}
+
+getMockBroadcastTransactionRes() {
+  return BroadcastTransactionRes();
 }
 
 TransactionId _getTransactionId(String id) {
