@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:faucet/chain/providers/selected_chain_provider.dart';
+import 'package:faucet/chain/models/chains.dart';
 import 'package:faucet/requests/utils/get_mock_requests.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
@@ -18,17 +20,21 @@ final requestStateAtIndexProvider = FutureProvider.family<Request, int>((ref, in
 });
 
 final requestProvider = StateNotifierProvider<RequestNotifier, AsyncValue<List<Request>>>((ref) {
+  final selectedChain = ref.watch(selectedChainProvider);
   return RequestNotifier(
     ref,
+    selectedChain,
   );
 });
 
 class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
+  final Chains selectedChain;
   final Ref ref;
   DateTime? lastRequestTime;
 
   RequestNotifier(
     this.ref,
+    this.selectedChain,
   ) : super(
           const AsyncLoading(),
         ) {
