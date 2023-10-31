@@ -108,5 +108,4 @@ web_build_and_host:
 
 file_test:
 	@reset
-	@flutter test test/search/desktop_search_test.dart
-	@flutter test test/requests/open_request_menu_test.dart
+	@flutter test test/chain/tablet_chain_test.dart
