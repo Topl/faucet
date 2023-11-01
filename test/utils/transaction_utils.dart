@@ -9,10 +9,12 @@ import 'package:topl_common/proto/brambl/models/transaction/io_transaction.pb.da
 import 'package:topl_common/proto/brambl/models/transaction/schedule.pb.dart';
 import 'package:topl_common/proto/brambl/models/transaction/spent_transaction_output.pb.dart';
 import 'package:topl_common/proto/brambl/models/transaction/unspent_transaction_output.pb.dart';
+import 'package:topl_common/proto/genus/genus_models.pb.dart';
+import 'package:topl_common/proto/genus/genus_rpc.pb.dart';
 import 'package:topl_common/proto/node/services/bifrost_rpc.pb.dart';
 import 'package:topl_common/proto/quivr/models/shared.pb.dart';
 
-getMockIoTransaction({
+IoTransaction getMockIoTransaction({
   String id = '1',
 }) {
   return IoTransaction(
@@ -37,6 +39,16 @@ getMockIoTransaction({
       _getUnspentTransactionOutput(),
     ],
     transactionId: _getTransactionId(id),
+  );
+}
+
+TransactionResponse getMockTransactionResponse({
+  String id = '1',
+}) {
+  return TransactionResponse(
+    transactionReceipt: TransactionReceipt(
+      transaction: getMockIoTransaction(id: id),
+    ),
   );
 }
 

@@ -76,6 +76,8 @@ class SearchNotifier extends StateNotifier<List<SearchResult>> {
       }
     }
 
+    print('QQQQ transaction results: ${transactionResults.length}');
+
     state = [...blockResults, ...transactionResults];
   }
 
@@ -86,6 +88,7 @@ class SearchNotifier extends StateNotifier<List<SearchResult>> {
 
     final BlockResult? block = await _searchForBlockById(id);
     final TransactionResult? transaction = await _searchForTransactionById(id);
+    print('QQQQ transaction: $transaction');
     final UTxOResult? utxo = await _searchForUTxOById(id);
 
     results.addAll([if (block != null) block, if (transaction != null) transaction, if (utxo != null) utxo]);
@@ -120,6 +123,7 @@ class SearchNotifier extends StateNotifier<List<SearchResult>> {
   }
 
   Future<TransactionResult?> _searchForTransactionById(String id) async {
+    print('QQQQ searching for transaction by id: $id');
     try {
       if (selectedChain == Chains.mock) {
         return Future.delayed(const Duration(milliseconds: 250), () {
@@ -132,12 +136,15 @@ class SearchNotifier extends StateNotifier<List<SearchResult>> {
         final TransactionResponse response =
             await ref.read(genusProvider(selectedChain)).getTransactionById(transactionIdString: id);
 
+        final Transaction transaction = await response.toTransaction(ref);
+
         return TransactionResult(
-          response.toTransaction(),
-          response.toTransaction().transactionId,
+          transaction,
+          transaction.transactionId,
         );
       }
     } catch (e) {
+      print('QQQQ error: $e');
       ref.read(loggerProvider).log(
             logLevel: LogLevel.Warning,
             loggerClass: LoggerClass.ApiError,

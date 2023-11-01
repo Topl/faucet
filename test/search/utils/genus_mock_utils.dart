@@ -3,6 +3,7 @@ import 'package:topl_common/genus/services/transaction_grpc.dart';
 
 import '../../shared/mocks/genus_mocks.mocks.dart';
 import '../../utils/block_utils.dart';
+import '../../utils/transaction_utils.dart';
 
 GenusGRPCService getMockSearchGenus({
   required String blockId,
@@ -29,6 +30,15 @@ GenusGRPCService getMockSearchGenus({
       return getMockBlockResponse(blockId: blockId, transactionId: transactionId);
     },
   );
+
+  when(mockGenus.getTransactionById(transactionIdString: transactionId)).thenAnswer((realInvocation) async {
+    print('QQQQ getting transaction by id: $transactionId');
+    return getMockTransactionResponse(id: transactionId);
+  });
+
+  when(mockGenus.getBlockById(blockIdString: anyNamed('blockIdString'))).thenAnswer((realInvocation) async {
+    return getMockBlockResponse(blockId: blockId, transactionId: transactionId);
+  });
 
   return mockGenus;
 }

@@ -10,7 +10,7 @@ import 'package:topl_common/proto/node/models/block.pb.dart';
 
 import 'transaction_utils.dart';
 
-getMockBlockResponse({
+BlockResponse getMockBlockResponse({
   String? blockId,
   String? transactionId,
 }) {
@@ -36,7 +36,7 @@ getMockBlockResponse({
         transactions: List.generate(
           10,
           (index) => getMockIoTransaction(
-            id: '${blockId}transaction$transactionId',
+            id: '${blockId}transaction$transactionId$index',
           ),
         ),
       ),
