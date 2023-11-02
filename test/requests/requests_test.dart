@@ -35,7 +35,7 @@ Future<void> invalidTestTokenRequest(TestScreenSizes testScreenSize) async => te
         await tester.pumpWidget(
           await essentialTestProviderWidget(tester: tester, testScreenSize: testScreenSize, overrides: [
             hivePackageProvider.overrideWithValue(
-              getMockRequestHive(),
+              getMockRequestHive().mockHive,
             ),
           ]),
         );
