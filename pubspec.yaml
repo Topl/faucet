@@ -57,6 +57,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   collection: ^1.17.2
   pointer_interceptor: ^0.9.3+5
+  easy_web_view: ^1.6.0
   
 
 dev_dependencies:
