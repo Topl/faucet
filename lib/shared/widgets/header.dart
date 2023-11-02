@@ -1,3 +1,4 @@
+import 'package:faucet/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -9,6 +10,7 @@ import '../utils/theme_color.dart';
 
 /// Header widget that displays the logo, search bar and dropdown.
 class Header extends HookConsumerWidget {
+  static const Key menuKey = Key('menuKey');
   final String logoAsset;
   final VoidCallback onSearch;
   final ValueChanged<String> onDropdownChanged;
@@ -59,14 +61,16 @@ class Header extends HookConsumerWidget {
               isSmallerThanOrEqualToTablet
                   ? SizedBox(
                       child: IconButton(
+                        key: menuKey,
                         onPressed: () {
-                          // toggle between light and dark theme
                           showGeneralDialog(
                             context: context,
-                            pageBuilder: (context, _, __) => MobileMenu(
-                              onSwitchChange: () {
-                                ref.read(appThemeColorProvider.notifier).toggleTheme();
-                              },
+                            pageBuilder: (context, _, __) => ResponsiveBreakPointsWrapper(
+                              child: MobileMenu(
+                                onSwitchChange: () {
+                                  ref.read(appThemeColorProvider.notifier).toggleTheme();
+                                },
+                              ),
                             ),
                             barrierDismissible: true,
                             transitionDuration: const Duration(milliseconds: 250),

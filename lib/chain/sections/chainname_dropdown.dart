@@ -16,6 +16,8 @@ import 'package:modal_side_sheet/modal_side_sheet.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class ChainNameDropDown extends HookConsumerWidget {
+  static const Key desktopDropDownKey = Key('desktopDropDownKey');
+  static const Key mobileDropDownKey = Key('mobileDropDownKey');
   final ThemeMode colorTheme;
   final void Function()? onItemSelected;
 
@@ -37,6 +39,7 @@ class ChainNameDropDown extends HookConsumerWidget {
       data: (List<Chains> chains) {
         return isResponsive
             ? _ResponsiveDropDown(
+                dropDownKey: mobileDropDownKey,
                 onItemSelected: onItemSelected,
                 chains: chains,
                 selectedChain: selectedChain,
@@ -50,6 +53,7 @@ class ChainNameDropDown extends HookConsumerWidget {
                 isDropDownOpen: isDropDownOpen,
               )
             : _DesktopDropdown(
+                key: desktopDropDownKey,
                 chains: chains,
                 selectedChain: selectedChain,
                 colorTheme: colorTheme,
@@ -78,6 +82,7 @@ class _ResponsiveDropDown extends StatelessWidget {
   final Function(String) removeCustomChain;
   final ValueNotifier<bool> isDropDownOpen;
   final void Function()? onItemSelected;
+  final Key dropDownKey;
 
   const _ResponsiveDropDown({
     required this.chains,
@@ -87,25 +92,31 @@ class _ResponsiveDropDown extends StatelessWidget {
     required this.removeCustomChain,
     required this.isDropDownOpen,
     required this.onItemSelected,
-    Key? key,
-  }) : super(key: key);
+    required this.dropDownKey,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          Strings.network,
-          style: bodyMedium(context),
-        ),
-        const Spacer(),
-        DropdownButtonHideUnderline(
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).width,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              Strings.network,
+              style: bodyMedium(context),
+            ),
+          ),
+          DropdownButtonHideUnderline(
+            key: dropDownKey,
             child: DropdownButton2(
-          isExpanded: true,
-          hint: const CustomTextWidget(),
-          items: [
-            ...chains
-                .map((Chains chain) => DropdownMenuItem(
+              isExpanded: true,
+              hint: const CustomTextWidget(),
+              items: [
+                ...chains.map(
+                  (Chains chain) {
+                    return DropdownMenuItem(
+                      key: Key(chain.key),
                       value: chain,
                       child: Row(
                         children: [
@@ -137,113 +148,118 @@ class _ResponsiveDropDown extends StatelessWidget {
                             )
                         ],
                       ),
-                    ))
-                .toList(),
-            DropdownMenuItem(
-              value: Strings.addNew,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: getSelectedColor(
-                        colorTheme,
-                        0xFF535757,
-                        0xFF858E8E,
-                      ),
-                      width: 0.2,
-                    ),
-                  ),
-                ),
-                child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      showModalSideSheet(
-                          context: context,
-                          ignoreAppBar: true,
-                          width: 640,
-                          barrierColor: Colors.white.withOpacity(barrierOpacity),
-                          // with blur,
-                          barrierDismissible: true,
-                          body: AddNewNetworkContainer(
-                            colorTheme: colorTheme,
-                          ));
-
-                      onItemSelected?.call();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 10),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.add, color: Color(0xFF535757), size: 20),
-                          const SizedBox(width: 4),
-                          Text(
-                            Strings.addNew,
-                            style: bodyMedium(context),
+                    );
+                  },
+                ).toList(),
+                DropdownMenuItem(
+                  value: Strings.addNew,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                          color: getSelectedColor(
+                            colorTheme,
+                            0xFF535757,
+                            0xFF858E8E,
                           ),
-                        ],
+                          width: 0.2,
+                        ),
                       ),
-                    )),
-              ),
-            )
-          ],
-          value: selectedChain,
-          selectedItemBuilder: (context) => chains
-              .map((Chains chain) => Row(
-                    children: [
-                      CustomItem(
+                    ),
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          showModalSideSheet(
+                              context: context,
+                              ignoreAppBar: true,
+                              width: 640,
+                              barrierColor: Colors.white.withOpacity(barrierOpacity),
+                              // with blur,
+                              barrierDismissible: true,
+                              body: AddNewNetworkContainer(
+                                colorTheme: colorTheme,
+                              ));
+
+                          onItemSelected?.call();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.add, color: Color(0xFF535757), size: 20),
+                              const SizedBox(width: 4),
+                              Text(
+                                Strings.addNew,
+                                style: bodyMedium(context),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ),
+                )
+              ],
+              value: selectedChain,
+              selectedItemBuilder: (context) => chains
+                  .map(
+                    (Chains chain) => Align(
+                      alignment: Alignment.center,
+                      child: CustomItem(
+                        key: Key(chain.key),
                         name: chain.networkName,
                       ),
-                    ],
-                  ))
-              .toList(),
-          onChanged: (value) {
-            if (value is Chains) setSelectedChain(value);
-          },
-          buttonStyleData: ButtonStyleData(
-            height: 40,
-            width: 160,
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              border: Border.all(
-                color: getSelectedColor(colorTheme, 0x809E9E9E, 0xFF4B4B4B),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value is Chains) setSelectedChain(value);
+              },
+              buttonStyleData: ButtonStyleData(
+                height: 40,
+                width: 160,
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(
+                    color: getSelectedColor(colorTheme, 0x809E9E9E, 0xFF4B4B4B),
+                  ),
+                  color: getSelectedColor(colorTheme, 0xFFF5F5F5, 0xFF4B4B4B),
+                ),
               ),
-              color: getSelectedColor(colorTheme, 0xFFF5F5F5, 0xFF4B4B4B),
+              dropdownStyleData: DropdownStyleData(
+                  maxHeight: 260,
+                  width: 345,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
+                  ),
+                  offset: const Offset(-185, -6),
+                  scrollbarTheme: ScrollbarThemeData(
+                    radius: const Radius.circular(40),
+                    thickness: MaterialStateProperty.all(6),
+                    thumbVisibility: MaterialStateProperty.all(true),
+                  )),
+              menuItemStyleData: const MenuItemStyleData(
+                height: 40,
+              ),
+              iconStyleData: IconStyleData(
+                icon: isDropDownOpen.value
+                    ? const Icon(
+                        Icons.keyboard_arrow_up,
+                        color: Color(0xFF858E8E),
+                      )
+                    : const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Color(0xFF858E8E),
+                      ),
+                iconSize: 20,
+              ),
+              onMenuStateChange: (isOpen) {
+                isDropDownOpen.value = !isDropDownOpen.value;
+              },
             ),
           ),
-          dropdownStyleData: DropdownStyleData(
-              maxHeight: 260,
-              width: 345,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
-              ),
-              offset: const Offset(-185, -6),
-              scrollbarTheme: ScrollbarThemeData(
-                radius: const Radius.circular(40),
-                thickness: MaterialStateProperty.all(6),
-                thumbVisibility: MaterialStateProperty.all(true),
-              )),
-          menuItemStyleData: const MenuItemStyleData(
-            height: 40,
-          ),
-          iconStyleData: IconStyleData(
-            icon: isDropDownOpen.value
-                ? const Icon(
-                    Icons.keyboard_arrow_up,
-                    color: Color(0xFF858E8E),
-                  )
-                : const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Color(0xFF858E8E),
-                  ),
-            iconSize: 20,
-          ),
-          onMenuStateChange: (isOpen) {
-            isDropDownOpen.value = !isDropDownOpen.value;
-          },
-        )),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -279,17 +295,20 @@ class _DesktopDropdown extends StatelessWidget {
             ...chains
                 .map(
                   (Chains chain) => DropdownMenuItem(
+                    key: Key(chain.key),
                     value: chain,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Row(
                         children: [
-                          Tooltip(
+                          Expanded(
+                            child: Tooltip(
                               message: chain.networkName.length > 8 ? chain.networkName : '',
                               child: CustomItem(
-                                name: shortenNetwork(chain),
-                              )),
-                          const Spacer(),
+                                name: chain.networkName,
+                              ),
+                            ),
+                          ),
                           Icon(
                             Icons.check,
                             color: const Color(0xFF7040EC),
@@ -329,6 +348,7 @@ class _DesktopDropdown extends StatelessWidget {
           value: selectedChain,
           selectedItemBuilder: (context) => chains
               .map((Chains chain) => Row(
+                    key: Key(chain.key),
                     children: [
                       Expanded(
                         child: Text(
@@ -414,6 +434,7 @@ class CustomItem extends StatelessWidget {
     return Text(
       name,
       style: bodyMedium(context),
+      overflow: TextOverflow.ellipsis,
     );
   }
 }
