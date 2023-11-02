@@ -57,6 +57,8 @@ dependencies:
   grpc: ^3.0.2
   flutter_dotenv: ^5.1.0
   collection: ^1.17.2
+  pointer_interceptor: ^0.9.3+5
+  
 
 dev_dependencies:
   flutter_test:
@@ -88,7 +90,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/fonts/
-    - assets/webpages/
+    - assets/webpages/index.html
     - assets/
 
   # To add assets to your application, add an assets section, like this:

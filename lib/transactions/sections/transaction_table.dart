@@ -1,9 +1,9 @@
 import 'package:faucet/home/sections/get_test_tokens.dart';
 import 'package:faucet/shared/constants/strings.dart';
 import 'package:faucet/shared/constants/ui.dart';
+import 'package:faucet/shared/extended-libraries/paginated_table.dart';
 import 'package:faucet/shared/providers/app_theme_provider.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
-import 'package:faucet/shared/widgets/paginated_table.dart';
 import 'package:faucet/transactions/models/transaction.dart';
 import 'package:faucet/transactions/providers/transactions_provider.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,6 @@ import 'package:faucet/transactions/widgets/custom_transaction_widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:modal_side_sheet/modal_side_sheet.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import '../../main.dart';
 
 /// This is a custom widget that shows the transaction table screen
