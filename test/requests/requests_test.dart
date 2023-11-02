@@ -16,7 +16,6 @@ import '../essential_test_provider_widget.dart';
 // import '../mocks/genus_mocks.dart';
 import '../mocks/node_mocks.dart';
 import '../required_test_class.dart';
-import '../shared/mocks/request_provider_mock.dart';
 import 'required_request_tests.dart';
 import 'utils/mock_request_hive_utils.dart';
 
@@ -53,11 +52,18 @@ Future<void> invalidTestTokenRequest(TestScreenSizes testScreenSize) async => te
         await tester.ensureVisible(requestTokenButton);
         await tester.pumpAndSettle();
         await tester.tap(requestTokenButton);
-        await tester.ensureVisible(find.byKey(ErrorDialog.requestErrorDialogKey));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.byKey(SuccessDialog.requestSuccessDialogKey));
+        // first time success message
+        expect(find.byKey(SuccessDialog.requestSuccessDialogKey), findsOneWidget);
+        // find close button
+        await tester.tap(find.bySemanticsLabel('Close'), warnIfMissed: false);
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(requestTokenButton);
+        await tester.pumpAndSettle();
+        await tester.tap(requestTokenButton);
+        await tester.pumpAndSettle();
+        //   second tap error message
         expect(find.byKey(ErrorDialog.requestErrorDialogKey), findsOneWidget);
-        // await tester.pumpAndSettle();
-        // await tester.tap(requestTokenButton);
-        // expect(find.byKey(SuccessDialog.requestSuccessDialogKey), findsOneWidget);
-        //   check that the error message is displayed
       },
     );

@@ -102,7 +102,6 @@ class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
       lastRequestTime = DateTime.now(); // Update the last request timestamp
 
       final requests = state.asData?.value ?? [];
-      print(requests);
 
       //make request using provided parameters
       var submittedRequest = requestToMake.copyWith(transactionId: '28EhwUBiHJ3evyGidV1WH8QMfrLF6N8UDze9Yw7jqi6w');
@@ -114,7 +113,7 @@ class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
       return submittedRequest;
     } catch (e) {
       errorDialogBuilder(context, e.toString());
-      throw Exception(e);
+      return requestToMake;
     }
   }
 }
@@ -195,6 +194,7 @@ Future<void> _successDialogBuilder(BuildContext context) {
 
 class SuccessDialog extends StatelessWidget {
   static const requestSuccessDialogKey = Key('requestSuccessDialogKey');
+  static const closeSuccessDialogKey = Key('closeSuccessDialogKey');
   const SuccessDialog({
     Key key = requestSuccessDialogKey,
     required this.isMobile,
@@ -257,9 +257,11 @@ class SuccessDialog extends StatelessWidget {
                 layout: isTablet ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
                 children: [
                   ResponsiveRowColumnItem(
-                    child: SelectableText(
-                      transactionHash,
-                      style: bodyMedium(context),
+                    child: Expanded(
+                      child: SelectableText(
+                        transactionHash,
+                        style: bodyMedium(context),
+                      ),
                     ),
                   ),
                   const ResponsiveRowColumnItem(
@@ -288,7 +290,7 @@ class SuccessDialog extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             SizedBox(
-              width: double.infinity,
+              // width: double.infinity,
               child: TextButton(
                 onPressed: () {
                   //  TODO: Add link to explorer using url_launcher
