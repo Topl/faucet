@@ -84,6 +84,7 @@ class SearchResultItem extends StatelessWidget {
   Widget build(BuildContext context) {
     print('QQQQ key in widget: ${searchResultItemKey()}');
     return ListTile(
+      key: searchResultItemKey(),
       title: Text('${itemType()} ${suggestion.id}', style: bodyMedium(context)),
       textColor: getSelectedColor(
         colorTheme,

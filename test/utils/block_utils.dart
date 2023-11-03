@@ -36,7 +36,7 @@ BlockResponse getMockBlockResponse({
         transactions: List.generate(
           10,
           (index) => getMockIoTransaction(
-            id: '${blockId}transaction$transactionId$index',
+            id: '$transactionId',
           ),
         ),
       ),

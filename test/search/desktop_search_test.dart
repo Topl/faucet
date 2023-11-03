@@ -6,6 +6,7 @@ import 'package:faucet/shared/utils/decode_id.dart';
 import 'package:faucet/transactions/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import '../essential_test_provider_widget.dart';
 import '../required_test_class.dart';
@@ -52,14 +53,13 @@ Future<void> successfulTransactionSearch(TestScreenSizes testScreenSize) async =
     testWidgets('Should show Transaction when transaction id is Searched', (WidgetTester tester) async {
       final blockId = createId();
       final transactionId = createId();
+      final mockSearchGenus = getMockSearchGenus(blockId: blockId, transactionId: transactionId);
 
       await tester.pumpWidget(
         await essentialTestProviderWidget(
           tester: tester,
           testScreenSize: testScreenSize,
-          overrides: [
-            genusProvider.overrideWith((ref, arg) => getMockSearchGenus(blockId: blockId, transactionId: transactionId))
-          ],
+          overrides: [genusProvider.overrideWith((ref, arg) => mockSearchGenus)],
         ),
       );
       await tester.pumpAndSettle();
@@ -80,20 +80,22 @@ Future<void> successfulTransactionSearch(TestScreenSizes testScreenSize) async =
       print('QQQQ key in test: $searchItemKey');
 
       expect(find.byKey(searchItemKey), findsOneWidget);
+
+      verify(mockSearchGenus.getBlockById(blockIdString: blockId)).called(1);
+      verify(mockSearchGenus.getTransactionById(transactionIdString: transactionId)).called(1);
     });
 
 Future<void> successfulBlockSearch(TestScreenSizes testScreenSize) async =>
     testWidgets('Should show Block when block id is Searched', (WidgetTester tester) async {
       final blockId = createId();
       final transactionId = createId();
+      final mockSearchGenus = getMockSearchGenus(blockId: blockId, transactionId: transactionId);
 
       await tester.pumpWidget(
         await essentialTestProviderWidget(
           tester: tester,
           testScreenSize: testScreenSize,
-          overrides: [
-            genusProvider.overrideWith((ref, arg) => getMockSearchGenus(blockId: blockId, transactionId: transactionId))
-          ],
+          overrides: [genusProvider.overrideWith((ref, arg) => mockSearchGenus)],
         ),
       );
       await tester.pumpAndSettle();
@@ -105,4 +107,5 @@ Future<void> successfulBlockSearch(TestScreenSizes testScreenSize) async =>
       await tester.pumpAndSettle();
 
       expect(find.byKey(SearchResults.searchResultsKey), findsOneWidget);
+      verify(mockSearchGenus.getBlockById()).called(2);
     });
