@@ -1,27 +1,29 @@
 import 'package:faucet/home/sections/get_test_tokens.dart';
-import 'package:faucet/requests/models/request.dart';
 import 'package:faucet/requests/providers/requests_provider.dart';
-import 'package:faucet/shared/constants/network_name.dart';
-import 'package:faucet/shared/constants/status.dart';
-import 'package:faucet/shared/providers/genus_provider.dart';
 import 'package:faucet/shared/services/hive/hive_service.dart';
 import 'package:faucet/transactions/sections/transaction_table.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:mockito/mockito.dart';
 
 import '../essential_test_provider_widget.dart';
-// import '../mocks/genus_mocks.dart';
-import '../mocks/node_mocks.dart';
 import '../required_test_class.dart';
-import 'required_request_tests.dart';
 import 'utils/mock_request_hive_utils.dart';
 
+class RequiredInvalidRequestsTests extends RequiredTest {
+  Future<void> Function(TestScreenSizes testScreenSize) invalidTestTokenRequest;
+
+  RequiredInvalidRequestsTests({
+    required this.invalidTestTokenRequest,
+    required super.testScreenSize,
+  });
+
+  Future<void> runTests() async {
+    await invalidTestTokenRequest(testScreenSize);
+  }
+}
+
 void main() async {
-  final requestTests = RequiredRequestsTests(
-    menuOpened: (testScreenSize) => invalidTestTokenRequest(testScreenSize),
+  final requestTests = RequiredInvalidRequestsTests(
+    invalidTestTokenRequest: (testScreenSize) => invalidTestTokenRequest(testScreenSize),
     testScreenSize: TestScreenSizes.desktop,
   );
 
