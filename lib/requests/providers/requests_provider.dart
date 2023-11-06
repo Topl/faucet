@@ -61,7 +61,6 @@ class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
         },
       );
     }
-
     return requests;
   }
 
@@ -102,10 +101,7 @@ class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
       }
       lastRequestTime = DateTime.now(); // Update the last request timestamp
 
-      final requests = state.asData?.value;
-      if (requests == null) {
-        throw Exception('Error in requestProvider: requests are null');
-      }
+      final requests = state.asData?.value ?? [];
 
       //make request using provided parameters
       var submittedRequest = requestToMake.copyWith(transactionId: '28EhwUBiHJ3evyGidV1WH8QMfrLF6N8UDze9Yw7jqi6w');
@@ -117,7 +113,7 @@ class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
       return submittedRequest;
     } catch (e) {
       errorDialogBuilder(context, e.toString());
-      throw Exception(e);
+      return requestToMake;
     }
   }
 }
@@ -127,38 +123,59 @@ Future<void> errorDialogBuilder(BuildContext context, String message) {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        title: ResponsiveRowColumn(
-          layout: isMobile ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
-          rowMainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ResponsiveRowColumnItem(
-              child: Text(
-                'Something went wrong...',
-                style: titleLarge(context),
-              ),
-            ),
-            ResponsiveRowColumnItem(
-              child: IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-          ],
-        ),
-        content: SizedBox(
-          width: 400.0,
-          child: Text(
-            message,
-            style: bodyMedium(context),
-          ),
-        ),
-        actionsPadding: const EdgeInsets.all(16),
+      return ErrorDialog(
+        isMobile: isMobile,
+        message: message,
       );
     },
   );
+}
+
+class ErrorDialog extends StatelessWidget {
+  static const requestErrorDialogKey = Key('requestErrorDialogKey');
+
+  const ErrorDialog({
+    Key key = requestErrorDialogKey,
+    required this.isMobile,
+    required this.message,
+  }) : super(key: key);
+
+  final bool isMobile;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: ResponsiveRowColumn(
+        layout: isMobile ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
+        rowMainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ResponsiveRowColumnItem(
+            child: Text(
+              'Something went wrong...',
+              style: titleLarge(context),
+            ),
+          ),
+          ResponsiveRowColumnItem(
+            child: IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
+      ),
+      content: SizedBox(
+        width: 400.0,
+        child: Text(
+          message,
+          style: bodyMedium(context),
+        ),
+      ),
+      actionsPadding: const EdgeInsets.all(16),
+    );
+  }
 }
 
 Future<void> _successDialogBuilder(BuildContext context) {
@@ -170,115 +187,137 @@ Future<void> _successDialogBuilder(BuildContext context) {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        title: ResponsiveRowColumn(
-          layout: isMobile ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
-          rowMainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return SuccessDialog(isMobile: isMobile, isTablet: isTablet, transactionHash: transactionHash);
+    },
+  );
+}
+
+class SuccessDialog extends StatelessWidget {
+  static const requestSuccessDialogKey = Key('requestSuccessDialogKey');
+  static const closeSuccessDialogKey = Key('closeSuccessDialogKey');
+  const SuccessDialog({
+    Key key = requestSuccessDialogKey,
+    required this.isMobile,
+    required this.isTablet,
+    required this.transactionHash,
+  }) : super(key: key);
+
+  final bool isMobile;
+  final bool isTablet;
+  final String transactionHash;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: ResponsiveRowColumn(
+        layout: isMobile ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
+        rowMainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ResponsiveRowColumnItem(
+            child: Text(
+              '${Strings.statusConfirmed}!',
+              style: titleLarge(context),
+            ),
+          ),
+          ResponsiveRowColumnItem(
+            child: IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
+      ),
+      content: SizedBox(
+        width: 550.0,
+        height: 300.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ResponsiveRowColumnItem(
-              child: Text(
-                '${Strings.statusConfirmed}!',
-                style: titleLarge(context),
-              ),
+            Text(
+              Strings.requestSuccessful,
+              style: bodyMedium(context),
             ),
-            ResponsiveRowColumnItem(
-              child: IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
+            const SizedBox(height: 30),
+            Text(
+              Strings.txnHash,
+              style: titleSmall(context),
             ),
-          ],
-        ),
-        content: SizedBox(
-          width: 550.0,
-          height: 300.0,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                Strings.requestSuccessful,
-                style: bodyMedium(context),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: const Color.fromRGBO(112, 64, 236, 0.04),
               ),
-              const SizedBox(height: 30),
-              Text(
-                Strings.txnHash,
-                style: titleSmall(context),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-                width: double.infinity,
-                alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromRGBO(112, 64, 236, 0.04),
-                ),
-                child: ResponsiveRowColumn(
-                  layout: isTablet ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
-                  children: [
-                    ResponsiveRowColumnItem(
+              child: ResponsiveRowColumn(
+                layout: isTablet ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
+                children: [
+                  ResponsiveRowColumnItem(
+                    child: Expanded(
                       child: SelectableText(
                         transactionHash,
                         style: bodyMedium(context),
                       ),
                     ),
-                    const ResponsiveRowColumnItem(
-                      child: SizedBox(width: 8),
-                    ),
-                    ResponsiveRowColumnItem(
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.copy,
-                          color: Color(0xFF858E8E),
-                        ),
-                        onPressed: () {
-                          Clipboard.setData(
-                            ClipboardData(text: transactionHash),
-                          );
-                          FToast().showToast(
-                            child: const Text(Strings.copyToClipboard),
-                            gravity: ToastGravity.BOTTOM,
-                            toastDuration: const Duration(seconds: 2),
-                          );
-                        },
+                  ),
+                  const ResponsiveRowColumnItem(
+                    child: SizedBox(width: 8),
+                  ),
+                  ResponsiveRowColumnItem(
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.copy,
+                        color: Color(0xFF858E8E),
                       ),
-                    )
-                  ],
+                      onPressed: () {
+                        Clipboard.setData(
+                          ClipboardData(text: transactionHash),
+                        );
+                        FToast().showToast(
+                          child: const Text(Strings.copyToClipboard),
+                          gravity: ToastGravity.BOTTOM,
+                          toastDuration: const Duration(seconds: 2),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(height: 30),
+            SizedBox(
+              // width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  //  TODO: Add link to explorer using url_launcher
+                },
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.all<EdgeInsets>(
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                  ),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    const Color(0xFF0DC8D4),
+                  ),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+                child: Text(
+                  Strings.viewExplorer,
+                  style: titleSmall(context)!.copyWith(color: Colors.white),
                 ),
               ),
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () {
-                    //  TODO: Add link to explorer using url_launcher
-                  },
-                  style: ButtonStyle(
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                    ),
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color(0xFF0DC8D4),
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    Strings.viewExplorer,
-                    style: titleSmall(context)!.copyWith(color: Colors.white),
-                  ),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
-        actionsPadding: const EdgeInsets.all(4),
-      );
-    },
-  );
+      ),
+      actionsPadding: const EdgeInsets.all(4),
+    );
+  }
 }

@@ -20,6 +20,7 @@ class TransactionTableScreen extends StatefulHookConsumerWidget {
   const TransactionTableScreen({Key? key}) : super(key: key);
   static const requestTokensKey = Key("requestTokens");
   static const String route = '/transactions';
+  static const Key requestTokenButtonKey = Key('requestTokensButton');
   @override
   _TransactionTableScreenState createState() => _TransactionTableScreenState();
 }

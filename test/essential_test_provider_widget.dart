@@ -35,7 +35,7 @@ Future<Widget> essentialTestProviderWidget({
 
   overrides = [
     genusProvider.overrideWith((ref, arg) => getMockGenus()),
-    hivePackageProvider.overrideWithValue(getMockHive()),
+    hivePackageProvider.overrideWithValue(getMockHive().mockHive),
     nodeProvider.overrideWith((ref, arg) => getMockNodeGRPCService()),
     ...overrides,
   ];

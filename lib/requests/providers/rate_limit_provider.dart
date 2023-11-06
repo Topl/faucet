@@ -40,7 +40,7 @@ class RateLimitNotifier extends StateNotifier<DateTime> {
 
   /// Retrieves the rate limit from the cache and updates the state if it exists.
   Future<void> _getRateLimitFromCache() async {
-    final rateLimit = await ref.read(hiveProvider).getItem(key: rateLimitHiveKey, boxType: HivesBox.customChains);
+    final rateLimit = await ref.read(hiveProvider).getItem(key: rateLimitHiveKey, boxType: HivesBox.rateLimit);
     if (rateLimit != null) {
       state = rateLimit;
     }
@@ -51,7 +51,7 @@ class RateLimitNotifier extends StateNotifier<DateTime> {
     DateTime? rateLimit,
   }) async {
     rateLimit ??= DateTime.now();
-    await ref.read(hiveProvider).putItem(key: rateLimitHiveKey, value: rateLimit, boxType: HivesBox.customChains);
+    await ref.read(hiveProvider).putItem(key: rateLimitHiveKey, value: rateLimit, boxType: HivesBox.rateLimit);
     state = DateTime.now();
   }
 }

@@ -25,6 +25,7 @@ class GetTestTokens extends HookConsumerWidget {
   static const selectNetworkKey = Key('selectNetworkKey');
   static const addressInputKey = Key('addressInputKey');
   static const recaptchaWidgetKey = Key('recaptcha-widget');
+  static const requestTokenButtonKey = Key('requestTokenButtonKey');
   GetTestTokens({Key key = getTestTokensKey, required this.colorTheme}) : super(key: key);
   final TextEditingController textWalletEditingController = TextEditingController();
   final ThemeMode colorTheme;
@@ -300,16 +301,17 @@ class GetTestTokens extends HookConsumerWidget {
                       width: isMobile ? 100 : 272,
                       height: 56,
                       child: ElevatedButton(
+                        key: requestTokenButtonKey,
                         onPressed: () {
                           notifier.makeRequest(
                             context,
                             Request(
-                              network: NetworkName.testnet,
-                              walletAddress: textWalletEditingController.text,
-                              status: Status.confirmed,
-                              dateTime: DateTime.now(),
-                              tokensDisbursed: 100,
-                            ),
+                                network: NetworkName.testnet,
+                                walletAddress: textWalletEditingController.text,
+                                status: Status.confirmed,
+                                dateTime: DateTime.now(),
+                                tokensDisbursed: 100,
+                                transactionId: '28EhwUBiHJ3evyGidV1WH8QMfrLF6N8UDze9Yw7jqi6w'),
                           );
                         },
                         style: ButtonStyle(
