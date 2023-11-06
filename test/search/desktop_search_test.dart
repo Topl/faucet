@@ -1,3 +1,4 @@
+import 'package:faucet/blocks/utils/utils.dart';
 import 'package:faucet/search/models/search_result.dart';
 import 'package:faucet/search/sections/custom_search_bar.dart';
 import 'package:faucet/search/sections/search_results.dart';
@@ -78,8 +79,16 @@ Future<void> successfulTransactionSearch(TestScreenSizes testScreenSize) async =
         suggestion: TransactionResult(getMockTransaction(), transactionId),
       ).searchResultItemKey();
       print('QQQQ key in test: $searchItemKey');
-
       expect(find.byKey(searchItemKey), findsOneWidget);
+
+      final searchItemKey1 = SearchResultItem(
+        colorTheme: ThemeMode.dark,
+        resultSelected: (_) {},
+        suggestion: BlockResult(getMockBlock(), blockId),
+      ).searchResultItemKey();
+
+      print('QQQQ block key in test: $searchItemKey1');
+      expect(find.byKey(searchItemKey1), findsOneWidget);
 
       verify(mockSearchGenus.getBlockById(blockIdString: blockId)).called(1);
       verify(mockSearchGenus.getTransactionById(transactionIdString: transactionId)).called(1);
