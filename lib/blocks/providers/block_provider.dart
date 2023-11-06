@@ -312,24 +312,18 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
     try {
       return blocks!.values.firstWhere((element) => element.header == header);
     } catch (e) {
-      print('QQQQ error in blockProvider: $e');
       final genusClient = ref.read(genusProvider(selectedChain));
-
-      print('QQQQ here 1');
 
       final config = ref.read(configProvider.future);
       final presentConfig = await config;
-      print('QQQQ here 2');
 
       var blockRes = await genusClient.getBlockById(blockIdString: header);
-      print('QQQQ here 3');
 
       final block = Block.fromBlockRes(
         blockRes: blockRes,
         epochLength: presentConfig.config.epochLength.toInt(),
       );
 
-      print('QQQQ here 4');
       // Set the state
       blocks = {...blocks ?? {}};
       // Get blocks depth

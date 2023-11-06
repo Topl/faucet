@@ -6,6 +6,7 @@ import 'package:faucet/chain/models/chains.dart';
 import 'package:faucet/chain/providers/selected_chain_provider.dart';
 import 'package:faucet/search/models/search_result.dart';
 import 'package:faucet/shared/models/logger.dart';
+import 'package:faucet/shared/providers/config_provider.dart';
 import 'package:faucet/shared/providers/genus_provider.dart';
 import 'package:faucet/shared/providers/logger_provider.dart';
 import 'package:faucet/transactions/models/transaction.dart';
@@ -16,6 +17,7 @@ import 'package:faucet/transactions/utils/extension.dart';
 import 'package:faucet/transactions/utils/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:topl_common/proto/genus/genus_rpc.pbgrpc.dart';
+import 'package:topl_common/proto/node/services/bifrost_rpc.pb.dart';
 
 /// This provider is used to determine if the RPC search results are loading.
 final isLoadingRpcSearchResultsProvider = StateProvider<bool>((ref) {
@@ -26,15 +28,20 @@ final isLoadingRpcSearchResultsProvider = StateProvider<bool>((ref) {
 /// It returns a [List] of [SearchResult] objects.
 final searchProvider = StateNotifierProvider<SearchNotifier, List<SearchResult>>((ref) {
   final selectedChain = ref.watch(selectedChainProvider);
-  return SearchNotifier(ref, selectedChain);
+  final config = ref.watch(configProvider.future);
+
+  return SearchNotifier(ref, selectedChain, config);
 });
 
 class SearchNotifier extends StateNotifier<List<SearchResult>> {
   final Ref ref;
   final Chains selectedChain;
+  final Future<FetchNodeConfigRes> config;
+
   SearchNotifier(
     this.ref,
     this.selectedChain,
+    this.config,
   ) : super(const []);
 
   /// This method is used to search for a [SearchResult] by an ID.
@@ -76,8 +83,6 @@ class SearchNotifier extends StateNotifier<List<SearchResult>> {
       }
     }
 
-    print('QQQQ transaction results: ${transactionResults.length}');
-
     state = [...blockResults, ...transactionResults];
   }
 
@@ -88,7 +93,6 @@ class SearchNotifier extends StateNotifier<List<SearchResult>> {
 
     final BlockResult? block = await _searchForBlockById(id);
     final TransactionResult? transaction = await _searchForTransactionById(id);
-    print('QQQQ transaction: $transaction');
     final UTxOResult? utxo = await _searchForUTxOById(id);
 
     results.addAll([if (block != null) block, if (transaction != null) transaction, if (utxo != null) utxo]);
@@ -109,7 +113,13 @@ class SearchNotifier extends StateNotifier<List<SearchResult>> {
       } else {
         final BlockResponse blockResponse =
             await ref.read(genusProvider(selectedChain)).getBlockById(blockIdString: id);
-        return BlockResult(blockResponse.toBlock(), blockResponse.toBlock().header);
+
+        final presentConfig = await config;
+
+        final BlockResult blockResult = BlockResult(blockResponse.toBlock(presentConfig.config.epochLength.toInt()),
+            blockResponse.toBlock(presentConfig.config.epochLength.toInt()).header);
+
+        return blockResult;
       }
     } catch (e) {
       ref.read(loggerProvider).log(
@@ -123,7 +133,6 @@ class SearchNotifier extends StateNotifier<List<SearchResult>> {
   }
 
   Future<TransactionResult?> _searchForTransactionById(String id) async {
-    print('QQQQ searching for transaction by id: $id');
     try {
       if (selectedChain == Chains.mock) {
         return Future.delayed(const Duration(milliseconds: 250), () {
@@ -144,7 +153,6 @@ class SearchNotifier extends StateNotifier<List<SearchResult>> {
         );
       }
     } catch (e) {
-      print('QQQQ error: $e');
       ref.read(loggerProvider).log(
             logLevel: LogLevel.Warning,
             loggerClass: LoggerClass.ApiError,

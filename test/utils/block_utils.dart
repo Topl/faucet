@@ -16,6 +16,7 @@ BlockResponse getMockBlockResponse({
 }) {
   blockId ??= createId();
   transactionId ??= createId();
+
   return BlockResponse(
     block: FullBlock(
       header: BlockHeader(

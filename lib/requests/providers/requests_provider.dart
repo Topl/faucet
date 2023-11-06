@@ -91,7 +91,6 @@ class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
   ///
   /// It returns a [Future<Request>]
   Future<Request> makeRequest(BuildContext context, Request requestToMake) async {
-    print('QQQQ requestToMake: ${requestToMake}');
     try {
       // Check if rate limit is reached
       if (lastRequestTime != null) {

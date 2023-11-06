@@ -13,8 +13,8 @@ class RequiredSearchTests extends RequiredTest {
   });
 
   Future<void> runTests() async {
-    // await textEntered(testScreenSize);
+    await textEntered(testScreenSize);
     await successfulTransactionSearch(testScreenSize);
-    // await successfulBlockSearch(testScreenSize);
+    await successfulBlockSearch(testScreenSize);
   }
 }

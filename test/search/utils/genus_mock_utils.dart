@@ -33,7 +33,11 @@ GenusGRPCService getMockSearchGenus({
   );
 
   when(mockGenus.getTransactionById(transactionIdString: transactionId)).thenAnswer((realInvocation) async {
-    print('QQQQ getting transaction by id: $transactionId');
+    return getMockTransactionResponse(id: transactionId, blockId: blockId);
+  });
+
+  when(mockGenus.getTransactionById(transactionIdString: anyNamed('transactionIdString')))
+      .thenAnswer((realInvocation) async {
     return getMockTransactionResponse(id: transactionId, blockId: blockId);
   });
 
