@@ -5,30 +5,34 @@ import 'package:mockito/mockito.dart';
 
 import 'hive_mocks.mocks.dart';
 
-@GenerateMocks([HiveInterface, Box])
-HiveInterface getMockHive() {
-  MockHiveInterface mockHive = MockHiveInterface();
-
-  for (var element in HivesBox.values) {
-    switch (element) {
-      case HivesBox.customChains:
-        when(mockHive.openBox(HivesBox.customChains.id)).thenAnswer((_) async {
-          return getMockCustomChains();
-        });
-        break;
-      case HivesBox.rateLimit:
-        when(mockHive.openBox(HivesBox.rateLimit.id)).thenAnswer((_) async {
-          return getMockRateLimit();
-        });
-        break;
-    }
-  }
-
-  return mockHive;
+class MockHiveResponse {
+  MockHiveInterface mockHive;
+  MockBox mockCustomChainBox;
+  MockBox mockRateLimitBox;
+  MockHiveResponse({
+    required this.mockHive,
+    required this.mockCustomChainBox,
+    required this.mockRateLimitBox,
+  });
 }
 
-Box getMockCustomChains() {
+@GenerateMocks([HiveInterface, Box])
+MockHiveResponse getMockHive() {
+  MockHiveInterface mockHive = MockHiveInterface();
+
+  return MockHiveResponse(
+    mockHive: mockHive,
+    mockCustomChainBox: getMockCustomChains(mockHive),
+    mockRateLimitBox: getMockRateLimit(mockHive),
+  );
+}
+
+MockBox getMockCustomChains(MockHiveInterface mockHive) {
   MockBox mockCustomChainsBox = MockBox();
+
+  when(mockHive.openBox(HivesBox.customChains.id)).thenAnswer((realInvocation) async {
+    return mockCustomChainsBox;
+  });
 
   when(mockCustomChainsBox.values).thenAnswer((realInvocation) {
     return [];
@@ -37,8 +41,12 @@ Box getMockCustomChains() {
   return mockCustomChainsBox;
 }
 
-Box getMockRateLimit() {
+MockBox getMockRateLimit(MockHiveInterface mockHive) {
   MockBox mockRateLimitBox = MockBox();
+
+  when(mockHive.openBox(HivesBox.rateLimit.id)).thenAnswer((realInvocation) async {
+    return mockRateLimitBox;
+  });
 
   when(mockRateLimitBox.values).thenAnswer((realInvocation) {
     return [];
