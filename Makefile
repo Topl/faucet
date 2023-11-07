@@ -108,4 +108,4 @@ web_build_and_host:
 
 file_test:
 	@reset
-	@flutter test test/chain/tablet_chain_test.dart
+	@flutter test test/requests/requests_test.dart
