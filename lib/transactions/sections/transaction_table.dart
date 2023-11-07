@@ -17,7 +17,8 @@ import '../../main.dart';
 
 /// This is a custom widget that shows the transaction table screen
 class TransactionTableScreen extends StatefulHookConsumerWidget {
-  const TransactionTableScreen({Key? key}) : super(key: key);
+  static const transactionsTableKey = Key('transactionsTableKey');
+  const TransactionTableScreen({key = transactionsTableKey}) : super(key: key);
   static const requestTokensKey = Key("requestTokens");
   static const String route = '/transactions';
   static const Key requestTokenButtonKey = Key('requestTokensButton');

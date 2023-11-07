@@ -29,6 +29,7 @@ class PaginatedTransactionTable extends HookConsumerWidget {
     final isBiggerScreen = MediaQuery.of(context).size.width == 1920;
     final isTablet = ResponsiveBreakpoints.of(context).equals(TABLET);
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
+    print("called");
 
     final colorTheme = ref.watch(appThemeColorProvider);
 
