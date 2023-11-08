@@ -6,25 +6,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../essential_test_provider_widget.dart';
 import '../required_test_class.dart';
+import 'required_request_tests.dart';
 import 'utils/mock_request_hive_utils.dart';
-
-class RequiredInvalidRequestsTests extends RequiredTest {
-  Future<void> Function(TestScreenSizes testScreenSize) invalidTestTokenRequest;
-
-  RequiredInvalidRequestsTests({
-    required this.invalidTestTokenRequest,
-    required super.testScreenSize,
-  });
-
-  Future<void> runTests() async {
-    await invalidTestTokenRequest(testScreenSize);
-  }
-}
 
 void main() async {
   final requestTests = RequiredInvalidRequestsTests(
     invalidTestTokenRequest: (testScreenSize) => invalidTestTokenRequest(testScreenSize),
-    testScreenSize: TestScreenSizes.desktop,
+    testScreenSize: TestScreenSizes.tablet,
   );
 
   await requestTests.runTests();
