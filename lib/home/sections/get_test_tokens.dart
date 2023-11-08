@@ -140,11 +140,14 @@ class GetTestTokens extends HookConsumerWidget {
             const SizedBox(
               height: 24,
             ),
-            CustomTestNetwork(),
+            CustomTestNetwork(
+              key: selectNetworkKey,
+            ),
             const SizedBox(
               height: 24,
             ),
             TextField(
+              key: addressInputKey,
               controller: textWalletEditingController,
               style: bodyMedium(context),
               decoration: InputDecoration(
@@ -244,6 +247,7 @@ class GetTestTokens extends HookConsumerWidget {
                       width: isMobile ? 100 : 272,
                       height: 56,
                       child: ElevatedButton(
+                        key: requestTokenButtonKey,
                         onPressed: () async {
                           await verifyToken(token);
                           if (token.value.isEmpty) {
