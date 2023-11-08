@@ -19,7 +19,7 @@ void main() async {
 }
 
 Future<void> invalidTestTokenRequest(TestScreenSizes testScreenSize) async => testWidgets(
-      'Should fail on invalid test token request',
+      'Desktop - Should fail on invalid test token request',
       (WidgetTester tester) async {
         await tester.pumpWidget(
           await essentialTestProviderWidget(tester: tester, testScreenSize: testScreenSize, overrides: [
@@ -47,13 +47,11 @@ Future<void> invalidTestTokenRequest(TestScreenSizes testScreenSize) async => te
         // first time success message
         expect(find.byKey(SuccessDialog.requestSuccessDialogKey), findsOneWidget);
         // find close button
-        await tester.tap(find.bySemanticsLabel('Close'), warnIfMissed: false);
+        await tester.tap(find.byKey(SuccessDialog.closeSuccessDialogKey));
         await tester.pumpAndSettle();
-        await tester.ensureVisible(requestTokenButton);
         await tester.pumpAndSettle();
         await tester.tap(requestTokenButton);
-        await tester.pumpAndSettle();
-        //   second tap error message
+        await tester.pumpAndSettle(const Duration(seconds: 1));
         expect(find.byKey(ErrorDialog.requestErrorDialogKey), findsOneWidget);
       },
     );

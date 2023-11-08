@@ -46,222 +46,223 @@ class GetTestTokens extends HookConsumerWidget {
     return Container(
       decoration: BoxDecoration(color: getSelectedColor(colorTheme, 0xFFFFFFFF, 0xFF282A2C)),
       child: Padding(
-        padding: EdgeInsets.all(isMobile ? 16.0 : 40.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              Strings.getTestNetwork,
-              style: headlineLarge(context),
-            ),
-            const SizedBox(
-              height: 48,
-            ),
-            Container(
-              height: 64,
-              width: 560,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: const Color.fromRGBO(112, 64, 236, 0.04),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 16),
-                  Icon(
-                    Icons.warning_amber,
-                    color: getSelectedColor(colorTheme, 0xFF7040EC, 0xFF7040EC),
-                    size: 24,
+          padding: EdgeInsets.all(isMobile ? 16.0 : 40.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  Strings.getTestNetwork,
+                  style: headlineLarge(context),
+                ),
+                const SizedBox(
+                  height: 48,
+                ),
+                Container(
+                  height: 64,
+                  width: 560,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: const Color.fromRGBO(112, 64, 236, 0.04),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: SizedBox(
-                      width: 450,
-                      child: Text(
-                        'Confirm details before submitting',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'Rational Display',
-                          fontWeight: FontWeight.w300,
-                          color: getSelectedColor(colorTheme, 0xFF7040EC, 0xFF7040EC),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      Icon(
+                        Icons.warning_amber,
+                        color: getSelectedColor(colorTheme, 0xFF7040EC, 0xFF7040EC),
+                        size: 24,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: SizedBox(
+                          width: 450,
+                          child: Text(
+                            'Confirm details before submitting',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Rational Display',
+                              fontWeight: FontWeight.w300,
+                              color: getSelectedColor(colorTheme, 0xFF7040EC, 0xFF7040EC),
+                            ),
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 48,
+                ),
+                TextField(
+                  key: lvlInputKey,
+                  controller: TextEditingController(text: 'LVL'),
+                  enabled: false,
+                  style: bodyMedium(context),
+                  decoration: InputDecoration(
+                    labelText: 'Tokens',
+                    labelStyle: bodyMedium(context),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                      ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 48,
-            ),
-            TextField(
-              key: lvlInputKey,
-              controller: TextEditingController(text: 'LVL'),
-              enabled: false,
-              style: bodyMedium(context),
-              decoration: InputDecoration(
-                labelText: 'Tokens',
-                labelStyle: bodyMedium(context),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                DropdownButton2(
+                  key: selectNetworkKey,
+                  hint: const Text(
+                    'Select a Network',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Rational Display',
+                      color: Color(0xFF858E8E),
+                    ),
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                  style: bodyMedium(context),
+                  underline: Container(
+                    height: 0,
                   ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            DropdownButton2(
-              key: selectNetworkKey,
-              hint: const Text(
-                'Select a Network',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'Rational Display',
-                  color: Color(0xFF858E8E),
-                ),
-              ),
-              style: bodyMedium(context),
-              underline: Container(
-                height: 0,
-              ),
-              buttonStyleData: ButtonStyleData(
-                height: 56,
-                width: 560,
-                padding: const EdgeInsets.only(left: 14, right: 14),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(
-                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF4B4B4B),
-                  ),
-                  color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
-                ),
-              ),
-              dropdownStyleData: DropdownStyleData(
-                maxHeight: 200,
-                decoration: BoxDecoration(
-                  color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(8.0),
-                    bottomRight: Radius.circular(8.0),
-                  ),
-                ),
-              ),
-              menuItemStyleData: const MenuItemStyleData(
-                height: 40,
-              ),
-              iconStyleData: IconStyleData(
-                icon: isCDropDownOpen
-                    ? const Icon(
-                        Icons.keyboard_arrow_up,
-                        color: Color(0xFF858E8E),
-                      )
-                    : const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Color(0xFF858E8E),
+                  buttonStyleData: ButtonStyleData(
+                    height: 56,
+                    width: 560,
+                    padding: const EdgeInsets.only(left: 14, right: 14),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(
+                        color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF4B4B4B),
                       ),
-                iconSize: 20,
-              ),
-              value: selectedNetwork,
-              // Array list of items
-              items: networks.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
-              onChanged: (value) {
-                selectedNetwork = value as String;
-              },
-              onMenuStateChange: (isOpen) {
-                isCDropDownOpen = !isCDropDownOpen;
-              },
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            TextField(
-              // TODO: Add to accept the address format only
-              key: addressInputKey,
-              controller: textWalletEditingController,
-              style: bodyMedium(context),
-              decoration: InputDecoration(
-                labelText: 'Wallet Address',
-                labelStyle: bodyMedium(context),
-                hintText: '0xxxxxxxxxxxxxxxxxxxxxxxxx',
-                suffix: TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: const Color(0xFFC0C4C4),
-                    padding: const EdgeInsets.all(16.0),
-                    textStyle: const TextStyle(fontSize: 16),
+                      color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
+                    ),
                   ),
-                  onPressed: () async {
-                    final copiedData = await Clipboard.getData('text/plain');
-                    textWalletEditingController.value = TextEditingValue(
-                      text: copiedData?.text ?? '',
-                      selection: TextSelection.fromPosition(
-                        TextPosition(offset: copiedData?.text?.length ?? 0),
+                  dropdownStyleData: DropdownStyleData(
+                    maxHeight: 200,
+                    decoration: BoxDecoration(
+                      color: getSelectedColor(colorTheme, 0xFFFEFEFE, 0xFF282A2C),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(8.0),
+                        bottomRight: Radius.circular(8.0),
                       ),
+                    ),
+                  ),
+                  menuItemStyleData: const MenuItemStyleData(
+                    height: 40,
+                  ),
+                  iconStyleData: IconStyleData(
+                    icon: isCDropDownOpen
+                        ? const Icon(
+                            Icons.keyboard_arrow_up,
+                            color: Color(0xFF858E8E),
+                          )
+                        : const Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Color(0xFF858E8E),
+                          ),
+                    iconSize: 20,
+                  ),
+                  value: selectedNetwork,
+                  // Array list of items
+                  items: networks.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
                     );
+                  }).toList(),
+                  onChanged: (value) {
+                    selectedNetwork = value as String;
                   },
-                  child: const Text('Paste'),
+                  onMenuStateChange: (isOpen) {
+                    isCDropDownOpen = !isCDropDownOpen;
+                  },
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
-                  ),
+                const SizedBox(
+                  height: 24,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Stack(children: [
-              SizedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      validate ? "This field is required" : '',
-                      style: titleSmall(context),
+                TextField(
+                  // TODO: Add to accept the address format only
+                  key: addressInputKey,
+                  controller: textWalletEditingController,
+                  style: bodyMedium(context),
+                  decoration: InputDecoration(
+                    labelText: 'Wallet Address',
+                    labelStyle: bodyMedium(context),
+                    hintText: '0xxxxxxxxxxxxxxxxxxxxxxxxx',
+                    suffix: TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: const Color(0xFFC0C4C4),
+                        padding: const EdgeInsets.all(16.0),
+                        textStyle: const TextStyle(fontSize: 16),
+                      ),
+                      onPressed: () async {
+                        final copiedData = await Clipboard.getData('text/plain');
+                        textWalletEditingController.value = TextEditingValue(
+                          text: copiedData?.text ?? '',
+                          selection: TextSelection.fromPosition(
+                            TextPosition(offset: copiedData?.text?.length ?? 0),
+                          ),
+                        );
+                      },
+                      child: const Text('Paste'),
                     ),
-                  ],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: getSelectedColor(colorTheme, 0xFFC0C4C4, 0xFF858E8E),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: !isMobile ? 30 : null,
-              ),
-              const Positioned(
-                  key: recaptchaWidgetKey,
-                  left: 0,
-                  top: 0,
-                  child: SizedBox(
+                const SizedBox(
+                  height: 8,
+                ),
+                Stack(children: [
+                  SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          validate ? "This field is required" : '',
+                          style: titleSmall(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: !isMobile ? 30 : null,
+                  ),
+                  const Positioned(
+                    key: recaptchaWidgetKey,
+                    left: 0,
+                    top: 0,
+                    child: SizedBox(
                       height: 200,
                       child: EasyWebView(
                         src:
@@ -271,72 +272,74 @@ class GetTestTokens extends HookConsumerWidget {
                         isMarkdown: false, // Use markdown syntax
                         convertToWidgets: false, // Try to convert to flutter widgets
                         height: 150,
-                      )))
-            ]),
-            Padding(
-              padding: const EdgeInsets.only(top: 64.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      width: isMobile ? 100 : 272,
-                      height: 56,
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            'Cancel',
-                            style: titleSmall(context),
-                          )),
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      width: isMobile ? 100 : 272,
-                      height: 56,
-                      child: ElevatedButton(
-                        key: requestTokenButtonKey,
-                        onPressed: () {
-                          notifier.makeRequest(
-                            context,
-                            Request(
-                                network: NetworkName.testnet,
-                                walletAddress: textWalletEditingController.text,
-                                status: Status.confirmed,
-                                dateTime: DateTime.now(),
-                                tokensDisbursed: 100,
-                                transactionId: '28EhwUBiHJ3evyGidV1WH8QMfrLF6N8UDze9Yw7jqi6w'),
-                          );
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color(0xFF0DC8D4),
-                          ),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                  )
+                ]),
+                Padding(
+                  padding: const EdgeInsets.only(top: 64.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          width: isMobile ? 100 : 272,
+                          height: 56,
+                          child: TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Cancel',
+                                style: titleSmall(context),
+                              )),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          width: isMobile ? 100 : 272,
+                          height: 56,
+                          child: ElevatedButton(
+                            key: requestTokenButtonKey,
+                            onPressed: () {
+                              notifier.makeRequest(
+                                context,
+                                Request(
+                                    network: NetworkName.testnet,
+                                    walletAddress: textWalletEditingController.text,
+                                    status: Status.confirmed,
+                                    dateTime: DateTime.now(),
+                                    tokensDisbursed: 100,
+                                    transactionId: '28EhwUBiHJ3evyGidV1WH8QMfrLF6N8UDze9Yw7jqi6w'),
+                              );
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color(0xFF0DC8D4),
+                              ),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              Strings.getLVL,
+                              style: titleSmall(context)!.copyWith(color: Colors.white),
                             ),
                           ),
                         ),
-                        child: Text(
-                          Strings.getLVL,
-                          style: titleSmall(context)!.copyWith(color: Colors.white),
-                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+                )
+              ],
+            ),
+          )),
     );
   }
 }
