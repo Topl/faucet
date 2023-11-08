@@ -59,13 +59,13 @@ class Footer extends HookConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          FooterBottomLinks(text: Strings.footerPrivacyPolicy),
+                          FooterBottomLinks(text: Strings.footerPrivacyPolicy, url: 'topl.co'),
                           SizedBox(width: 15),
-                          FooterBottomLinks(text: Strings.footerTermsOfUse),
+                          FooterBottomLinks(text: Strings.footerTermsOfUse, url: 'topl.co'),
                           SizedBox(width: 15),
-                          FooterBottomLinks(text: Strings.footerCookiePolicy),
+                          FooterBottomLinks(text: Strings.footerCookiePolicy, url: 'topl.co'),
                           SizedBox(width: 15),
-                          FooterBottomLinks(text: Strings.footerCookiePreferences),
+                          FooterBottomLinks(text: Strings.footerCookiePreferences, url: 'topl.co'),
                         ],
                       ),
                     ),
@@ -81,7 +81,10 @@ class Footer extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const FooterBottomLinks(text: Strings.footerRightsReserved),
+                        const FooterBottomLinks(
+                          text: Strings.footerRightsReserved,
+                          url: 'topl.co',
+                        ),
                         const SizedBox(width: 15),
                         SvgPicture.asset(
                           colorTheme == ThemeMode.light ? 'assets/icons/logo.svg' : 'assets/icons/logo_dark.svg',
@@ -124,20 +127,23 @@ class RowIcons extends StatelessWidget {
 }
 
 class FooterBottomLinks extends HookConsumerWidget {
-  const FooterBottomLinks({
-    super.key,
-    required this.text,
-  });
+  const FooterBottomLinks({super.key, required this.text, required this.url});
 
   final String text;
+  final String url;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Text(
-      text,
-      style: bodySmall(context),
-      textAlign: TextAlign.center,
-    );
+    return GestureDetector(
+        onTap: () {
+          final linkUrl = Uri.https(url, '/privacy-policy/');
+          launchUrl(linkUrl);
+        },
+        child: Text(
+          text,
+          style: bodySmall(context),
+          textAlign: TextAlign.center,
+        ));
   }
 }
 
