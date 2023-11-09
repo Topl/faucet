@@ -354,8 +354,22 @@ final getFirstPopulatedBlockProvider =
   final genusClient = ref.read(genusProvider(selectedChain));
   var nextBlock = await genusClient.getBlockByDepth(depth: depth);
 
+  // Get the current time
+  final startTime = DateTime.now();
+
   //check that block has transactions
   while (!nextBlock.block.fullBody.hasField(1)) {
+    // This will break the loop after 20 seconds
+    // Get the current time in each iteration
+    final currentTime = DateTime.now();
+    // Calculate the elapsed time
+    final elapsedTime = currentTime.difference(startTime);
+    // If the elapsed time is greater than the desired duration, break the loop
+    if (elapsedTime > const Duration(seconds: 20)) {
+      // replace 10 with your desired duration in seconds
+      throw ('Error in blockProvider: getFirstPopulatedBlockProvider took too long');
+    }
+
     depth++;
     nextBlock = await genusClient.getBlockByDepth(depth: depth);
   }
