@@ -55,11 +55,6 @@ Future<void> requestTokenTest(TestScreenSizes testScreenSize) async =>
       await tester.tap(requestTokenButton);
       await tester.pumpAndSettle();
 
-      bool successDialogIsDisplayed = find.byKey(SuccessDialog.requestSuccessDialogKey).evaluate().isNotEmpty;
-
-      if (successDialogIsDisplayed) {
-        //Show success dialog
-        expect(find.byKey(SuccessDialog.requestSuccessDialogKey), findsOneWidget);
-        await tester.pumpAndSettle();
-      }
+      expect(find.byKey(SuccessDialog.requestSuccessDialogKey), findsOneWidget);
+      await tester.pumpAndSettle();
     });
