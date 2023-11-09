@@ -35,7 +35,7 @@ class SearchResults extends HookConsumerWidget {
             children: [
               // List items from results
               for (SearchResult suggestion in results)
-                _SearchResultItem(
+                SearchResultItem(
                   suggestion: suggestion,
                   colorTheme: colorTheme,
                   resultSelected: resultSelected,
@@ -59,11 +59,11 @@ class SearchResults extends HookConsumerWidget {
   }
 }
 
-class _SearchResultItem extends StatelessWidget {
+class SearchResultItem extends StatelessWidget {
   final SearchResult suggestion;
   final ThemeMode colorTheme;
   final Function(SearchResult) resultSelected;
-  const _SearchResultItem({
+  const SearchResultItem({
     required this.suggestion,
     required this.colorTheme,
     required this.resultSelected,
@@ -78,9 +78,12 @@ class _SearchResultItem extends StatelessWidget {
     );
   }
 
+  Key searchResultItemKey() => Key(itemType() + suggestion.id);
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      key: searchResultItemKey(),
       title: Text('${itemType()} ${suggestion.id}', style: bodyMedium(context)),
       textColor: getSelectedColor(
         colorTheme,

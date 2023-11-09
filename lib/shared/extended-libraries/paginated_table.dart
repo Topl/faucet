@@ -2,10 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 
-///
-/// This Paginated Table comes from the Material UI PaginateDataTable
-/// And has been customized and expanded in order to fit our Design need.
-///
+import '../theme.dart';
 
 class PaginatedTable extends StatefulWidget {
   final Widget? footerButton;
@@ -100,8 +97,20 @@ class PaginatedDataTableState extends State<PaginatedTable> {
   late int _firstRowIndex;
   late int _rowCount;
   late bool _rowCountApproximate;
+  int _currentPage = 1;
+  final FocusNode _pageFocusNode = FocusNode();
+
+  final TextEditingController _pageController = TextEditingController();
+
   int _selectedRowCount = 0;
   final Map<int, DataRow?> _rows = <int, DataRow?>{};
+  int _calculateCurrentPage(int firstRowIndex, int rowsPerPage) {
+    return (firstRowIndex / rowsPerPage).ceil() + 1;
+  }
+
+  int _calculateTotalPages(int totalRows, int rowsPerPage) {
+    return (totalRows / rowsPerPage).ceil();
+  }
 
   @override
   void initState() {
@@ -134,6 +143,19 @@ class PaginatedDataTableState extends State<PaginatedTable> {
       _selectedRowCount = widget.source.selectedRowCount;
       _rows.clear();
     });
+  }
+
+  void _goToPage() {
+    int? pageNumber = int.tryParse(_pageController.text);
+    if (pageNumber != null &&
+        pageNumber > 0 &&
+        pageNumber <= _calculateTotalPages(widget.source.rowCount, widget.rowsPerPage)) {
+      // Set the first row index based on the page number
+      setState(() {
+        _firstRowIndex = (pageNumber - 1) * widget.rowsPerPage;
+      });
+      // Optional: Call any other logic or callbacks like widget.onPageChanged
+    }
   }
 
   void pageTo(int rowIndex) {
@@ -192,10 +214,6 @@ class PaginatedDataTableState extends State<PaginatedTable> {
     return result;
   }
 
-  void _handleFirst() {
-    pageTo(0);
-  }
-
   void _handlePrevious() {
     pageTo(math.max(_firstRowIndex - widget.rowsPerPage, 0));
   }
@@ -204,29 +222,16 @@ class PaginatedDataTableState extends State<PaginatedTable> {
     pageTo(_firstRowIndex + widget.rowsPerPage);
   }
 
-  void _handleLast() {
-    pageTo(((_rowCount - 1) / widget.rowsPerPage).floor() * widget.rowsPerPage);
-  }
-
   bool _isNextPageUnavailable() => !_rowCountApproximate && (_firstRowIndex + widget.rowsPerPage >= _rowCount);
 
   final GlobalKey _tableKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    double containerWidth;
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    if (screenWidth > 1200) {
-      containerWidth = 600.0;
-    } else if (screenWidth > 800) {
-      containerWidth = 500.0;
-    } else {
-      containerWidth = 300.0;
-    }
     assert(debugCheckHasMaterialLocalizations(context));
     final ThemeData themeData = Theme.of(context);
     final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    // HEADER
     final List<Widget> headerWidgets = <Widget>[];
     if (_selectedRowCount == 0 && widget.header != null) {
       headerWidgets.add(Expanded(child: widget.header!));
@@ -250,76 +255,170 @@ class PaginatedDataTableState extends State<PaginatedTable> {
     final TextStyle? footerTextStyle = themeData.textTheme.bodySmall;
     final List<Widget> footerWidgets = <Widget>[];
     if (widget.onRowsPerPageChanged != null) {
-      final List<Widget> availableRowsPerPage = widget.availableRowsPerPage
-          .where((int value) => value <= _rowCount || value == widget.rowsPerPage)
-          .map<DropdownMenuItem<int>>((int value) {
-        return DropdownMenuItem<int>(
-          value: value,
-          child: Text('$value'),
-        );
-      }).toList();
       footerWidgets.addAll(<Widget>[
-        Container(width: 14.0),
-        Text(localizations.rowsPerPageTitle),
-        ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 64.0),
-          child: Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<int>(
-                items: availableRowsPerPage.cast<DropdownMenuItem<int>>(),
-                value: widget.rowsPerPage,
-                onChanged: widget.onRowsPerPageChanged,
-                style: footerTextStyle,
+        IconButton(
+          icon: Icon(Icons.chevron_left, color: widget.arrowHeadColor),
+          padding: EdgeInsets.zero,
+          tooltip: localizations.previousPageTooltip,
+          onPressed: _firstRowIndex <= 0
+              ? null
+              : () {
+                  _handlePrevious();
+                  _pageController.clear(); // Clear the content inside the TextField.
+                  setState(() {}); // Rebuild to reflect the changes.
+                },
+        ),
+        Container(width: 12.0),
+        if (_calculateCurrentPage(_firstRowIndex, widget.rowsPerPage) == 1) ...[
+          GestureDetector(
+            onTap: () {
+              _firstRowIndex = 0;
+            },
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.black12,
+                borderRadius: BorderRadius.circular(6.0),
+              ),
+              child: Center(
+                child: Text(
+                  '1',
+                  style: titleMedium(context),
+                ),
               ),
             ),
           ),
+          Container(width: 8.0),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _firstRowIndex = widget.rowsPerPage * 1;
+              });
+            },
+            child: Text(
+              '2',
+              style: titleMedium(context),
+            ),
+          ),
+          Container(width: 8.0),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _firstRowIndex = 0;
+                _firstRowIndex = widget.rowsPerPage * 2;
+              });
+            },
+            child: Text('3', style: titleMedium(context)),
+          ),
+        ] else ...[
+          if (_calculateCurrentPage(_firstRowIndex, widget.rowsPerPage) - 1 > 0)
+            GestureDetector(
+              onTap: _firstRowIndex <= 0
+                  ? null
+                  : () {
+                      _handlePrevious();
+                      _pageController.clear(); // Clear the content inside the TextField.
+                      setState(() {}); // Rebuild to reflect the changes.
+                    },
+              child: Text(
+                '${_calculateCurrentPage(_firstRowIndex, widget.rowsPerPage) - 1}',
+                style: titleMedium(context),
+              ),
+            ),
+          Container(width: 8.0),
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.black12,
+                borderRadius: BorderRadius.circular(6.0),
+              ),
+              child: Center(
+                child: Text(
+                  '${_calculateCurrentPage(_firstRowIndex, widget.rowsPerPage)}',
+                  style: titleMedium(context),
+                ),
+              ),
+            ),
+          ),
+          Container(width: 8.0),
+          if (_calculateCurrentPage(_firstRowIndex, widget.rowsPerPage) + 1 <=
+              _calculateTotalPages(widget.source.rowCount, widget.rowsPerPage)) // If there's a next page
+            GestureDetector(
+              onTap: _isNextPageUnavailable()
+                  ? null
+                  : () {
+                      _handleNext();
+                      _pageController.clear(); // Clear the content inside the TextField.
+                      setState(() {}); // Rebuild to
+                    },
+              child: Text(
+                '${_calculateCurrentPage(_firstRowIndex, widget.rowsPerPage) + 1}',
+                style: const TextStyle(fontSize: 25),
+              ),
+            ),
+        ],
+        IconButton(
+          icon: Icon(Icons.chevron_right, color: widget.arrowHeadColor),
+          padding: EdgeInsets.zero,
+          tooltip: localizations.nextPageTooltip,
+          onPressed: _isNextPageUnavailable()
+              ? null
+              : () {
+                  _handleNext();
+                  _pageController.clear(); // Clear the content inside the TextField.
+                  setState(() {}); // Rebuild to reflect the changes.
+                },
         ),
       ]);
+
+      footerWidgets.addAll(<Widget>[
+        Align(
+          alignment: Alignment.center,
+          child: Padding(
+              padding: const EdgeInsets.only(left: 340, right: 340),
+              child: Row(
+                children: [
+                  Text("Go To  ", style: titleMedium(context)),
+                  Container(
+                    height: 40,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: TextField(
+                      focusNode: _pageFocusNode, // Assign the focus node to the TextField
+                      controller: _pageController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: '${_calculateCurrentPage(_firstRowIndex, widget.rowsPerPage)}',
+                        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      textAlign: TextAlign.center,
+                      onChanged: (value) {
+                        final pageIndex = int.tryParse(value);
+                        if (pageIndex != null) {
+                          _firstRowIndex = widget.rowsPerPage * (pageIndex - 1);
+                          setState(() {});
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(" page", style: titleMedium(context)),
+                ],
+              )),
+        ),
+        if (widget.footerButton != null) widget.footerButton!,
+      ]);
     }
-    footerWidgets.addAll(<Widget>[
-      Container(width: 32.0),
-      Text(
-        localizations.pageRowsInfoTitle(
-          _firstRowIndex + 1,
-          _firstRowIndex + widget.rowsPerPage,
-          _rowCount,
-          _rowCountApproximate,
-        ),
-      ),
-      Container(width: 32.0),
-      if (widget.showFirstLastButtons)
-        IconButton(
-          icon: Icon(Icons.skip_previous, color: widget.arrowHeadColor),
-          padding: EdgeInsets.zero,
-          tooltip: localizations.firstPageTooltip,
-          onPressed: _firstRowIndex <= 0 ? null : _handleFirst,
-        ),
-      IconButton(
-        icon: Icon(Icons.chevron_left, color: widget.arrowHeadColor),
-        padding: EdgeInsets.zero,
-        tooltip: localizations.previousPageTooltip,
-        onPressed: _firstRowIndex <= 0 ? null : _handlePrevious,
-      ),
-      Container(width: 24.0),
-      IconButton(
-        icon: Icon(Icons.chevron_right, color: widget.arrowHeadColor),
-        padding: EdgeInsets.zero,
-        tooltip: localizations.nextPageTooltip,
-        onPressed: _isNextPageUnavailable() ? null : _handleNext,
-      ),
-      if (widget.showFirstLastButtons)
-        IconButton(
-          icon: Icon(Icons.skip_next, color: widget.arrowHeadColor),
-          padding: EdgeInsets.zero,
-          tooltip: localizations.lastPageTooltip,
-          onPressed: _isNextPageUnavailable() ? null : _handleLast,
-        ),
-      Container(
-        width: containerWidth,
-      ),
-      if (widget.footerButton != null) widget.footerButton!,
-    ]);
 
     return Card(
       semanticContainer: false,
