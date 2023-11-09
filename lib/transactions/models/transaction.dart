@@ -62,21 +62,22 @@ class Transaction with _$Transaction {
     final txFees = calculateFees(inputs: inputList, outputs: outputList).toDouble();
 
     final transaction = Transaction(
-        transactionId: decodeId(blockRes.block.fullBody.transactions[index].transactionId.value),
-        status: TransactionStatus.pending,
-        block: block,
-        broadcastTimestamp: block.timestamp,
-        confirmedTimestamp: 0,
-        transactionType: TransactionType.transfer,
-        amount: txAmount,
-        transactionFee: txFees,
-        senderAddress:
-            blockRes.block.fullBody.transactions[index].inputs.map((e) => decodeId(e.address.id.value)).toList(),
-        receiverAddress:
-            blockRes.block.fullBody.transactions[index].outputs.map((e) => decodeId(e.address.id.value)).toList(),
-        transactionSize: blockRes.block.fullBody.transactions[index].writeToBuffer().lengthInBytes.toDouble(),
-        quantity: txAmount,
-        name: blockRes.block.fullBody.transactions[index].inputs[0].value.hasLvl() ? 'Lvl' : 'Topl');
+      transactionId: decodeId(blockRes.block.fullBody.transactions[index].transactionId.value),
+      status: TransactionStatus.pending,
+      block: block,
+      broadcastTimestamp: block.timestamp,
+      confirmedTimestamp: 0,
+      transactionType: TransactionType.transfer,
+      amount: txAmount,
+      transactionFee: txFees,
+      senderAddress:
+          blockRes.block.fullBody.transactions[index].inputs.map((e) => decodeId(e.address.id.value)).toList(),
+      receiverAddress:
+          blockRes.block.fullBody.transactions[index].outputs.map((e) => decodeId(e.address.id.value)).toList(),
+      transactionSize: blockRes.block.fullBody.transactions[index].writeToBuffer().lengthInBytes.toDouble(),
+      quantity: txAmount,
+      name: blockRes.block.fullBody.transactions[index].inputs[0].value.hasLvl() ? 'Lvl' : 'Topl',
+    );
 
     return transaction;
   }
