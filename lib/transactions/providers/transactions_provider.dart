@@ -171,15 +171,11 @@ class TransactionsNotifier extends StateNotifier<AsyncValue<List<Transaction>>> 
       state = const AsyncLoading();
       final List<Transaction> transactions = [];
       //get first populated block
-
       try {
         var latestBlockRes = await ref.read(getFirstPopulatedBlockProvider(selectedChain).future);
-
         final config = ref.read(configProvider.future);
         final presentConfig = await config;
-
         int transactionCount = latestBlockRes.block.fullBody.transactions.length;
-
         var latestBlock = Block(
           header: decodeId(latestBlockRes.block.header.headerId.value),
           epoch: latestBlockRes.block.header.slot.toInt() ~/ presentConfig.config.epochLength.toInt(),
@@ -189,7 +185,6 @@ class TransactionsNotifier extends StateNotifier<AsyncValue<List<Transaction>>> 
           timestamp: latestBlockRes.block.header.timestamp.toInt(),
           transactionNumber: transactionCount,
         );
-
         //continue going through transactions
         for (int i = 0; i < transactionCount; i++) {
           //calculate transaction amount
@@ -197,6 +192,11 @@ class TransactionsNotifier extends StateNotifier<AsyncValue<List<Transaction>>> 
           var inputList = latestBlockRes.block.fullBody.transactions[i].inputs.toList();
           var txAmount = calculateAmount(outputs: outputList);
           var txFees = calculateFees(inputs: inputList, outputs: outputList);
+
+          final name = latestBlockRes.block.fullBody.transactions[i].inputs.isNotEmpty &&
+                  latestBlockRes.block.fullBody.transactions[i].inputs[0].value.hasLvl()
+              ? 'Lvl'
+              : 'Topl';
 
           transactions.add(
             Transaction(
@@ -216,7 +216,7 @@ class TransactionsNotifier extends StateNotifier<AsyncValue<List<Transaction>>> 
                   .map((e) => decodeId(e.address.id.value))
                   .toList(),
               transactionSize: latestBlockRes.block.fullBody.transactions[i].writeToBuffer().lengthInBytes.toDouble(),
-              name: latestBlockRes.block.fullBody.transactions[i].inputs[0].value.hasLvl() ? 'Lvl' : 'Topl',
+              name: name,
             ),
           );
         }
