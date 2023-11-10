@@ -11,14 +11,15 @@ import 'package:modal_side_sheet/modal_side_sheet.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class PaginatedTransactionTable extends HookConsumerWidget {
+  static const paginatedTransactionTableKey = Key('paginatedTransactionTableKey');
   final List<Transaction> transactions;
   final bool showAllColumns;
   final bool isTabView;
   const PaginatedTransactionTable({
+    key = paginatedTransactionTableKey,
     required this.transactions,
     required this.showAllColumns,
     this.isTabView = false,
-    Key? key,
   }) : super(key: key);
   static const availableRowsPerPage = <int>[5, 10, 15, 20];
 

@@ -108,4 +108,4 @@ web_build_and_host:
 
 file_test:
 	@reset
-	@flutter test test/
+	@flutter test test/transactions/tablet_transactions_test.dart
