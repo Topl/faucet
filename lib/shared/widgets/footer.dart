@@ -12,9 +12,8 @@ import 'custom_shared.dart';
 
 /// Footer Widget
 class Footer extends HookConsumerWidget {
-  const Footer({
-    super.key,
-  });
+  static const footerKey = Key('footerKey');
+  const Footer({Key key = footerKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

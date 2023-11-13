@@ -307,14 +307,10 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
   Future<Block> getBlockFromStateById(String header) async {
     var blocks = state.asData?.value;
 
-    if (blocks == null) {
-      throw Exception('Error in block provider: blocks are null');
-    }
-
     // If the state contains the block, return it
 
     try {
-      return blocks.values.firstWhere((element) => element.header == header);
+      return blocks!.values.firstWhere((element) => element.header == header);
     } catch (e) {
       final genusClient = ref.read(genusProvider(selectedChain));
 
@@ -329,14 +325,19 @@ class BlockNotifier extends StateNotifier<AsyncValue<Map<int, Block>>> {
       );
 
       // Set the state
-      blocks = {...blocks};
+      blocks = {...blocks ?? {}};
       // Get blocks depth
-      final depth = blocks[0]!.height - block.height;
-      if (depth < 0) {
+
+      if (blocks.isEmpty) {
         blocks[0] = block;
       } else {
-        blocks[depth] = block;
+        final depth = blocks[0]!.height - block.height;
+        if (depth < 0) {
+        } else {
+          blocks[depth] = block;
+        }
       }
+
       final sortedBlocks = sortBlocksByDepth(blocks: blocks);
       state = AsyncData(sortedBlocks);
 
