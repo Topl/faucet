@@ -221,6 +221,7 @@ class SuccessDialog extends StatelessWidget {
           ),
           ResponsiveRowColumnItem(
             child: IconButton(
+              key: closeSuccessDialogKey,
               icon: const Icon(Icons.close),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -257,11 +258,11 @@ class SuccessDialog extends StatelessWidget {
                 layout: isTablet ? ResponsiveRowColumnType.COLUMN : ResponsiveRowColumnType.ROW,
                 children: [
                   ResponsiveRowColumnItem(
-                    child: Expanded(
-                      child: SelectableText(
-                        transactionHash,
-                        style: bodyMedium(context),
-                      ),
+                    rowFlex: 5,
+                    columnOrder: 1,
+                    child: SelectableText(
+                      transactionHash,
+                      style: bodyMedium(context),
                     ),
                   ),
                   const ResponsiveRowColumnItem(
