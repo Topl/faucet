@@ -108,4 +108,4 @@ web_build_and_host:
 
 file_test:
 	@reset
-	@flutter test test/requests/mobile_request_failed_test.dart
+	@flutter test test/shared/widgets/mobile_footer_tests.dart
