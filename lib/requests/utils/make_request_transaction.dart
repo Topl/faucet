@@ -1,4 +1,3 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:brambldart/brambldart.dart';
 import 'dart:io';
 import 'package:topl_common/proto/brambl/models/address.pb.dart';
@@ -24,9 +23,7 @@ Future<IoTransaction> makeRequestTransaction(Chains selectedChain, int amount, S
   final lockTemplate = PredicateTemplate([signatureTemplate], 1);
   final lock = lockTemplate.build([childKeys.vk]);
   final lockAddress = await transactionBuilderAPI.lockAddress(lock.get());
-  final toLockAddress = LockAddress(network: testnetId, ledger: 0, id: LockId(value: toAddress.toUtf8()));
-  //ensure base58 decoding is done properly
-  //uint8 has equals extension
+  final toLockAddress = LockAddress(network: testnetId, ledger: 0, id: AddressCodecs.decode(toAddress).get().id);
 
   final channel = getChannel(selectedChain);
 
