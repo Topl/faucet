@@ -58,7 +58,7 @@ dependencies:
   collection: ^1.17.2
   pointer_interceptor: ^0.9.3+5
   easy_web_view: ^1.6.0
-  
+  universal_html: ^2.2.4
 
 dev_dependencies:
   flutter_test:

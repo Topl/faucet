@@ -1,6 +1,5 @@
 import 'dart:async' show Future;
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:js' as js;
+import 'package:universal_html/js.dart' as js;
 
 import 'package:faucet/shared/extended-libraries/webviewx/src/utils/logger.dart';
 import 'package:faucet/shared/extended-libraries/webviewx/src/utils/source_type.dart';
@@ -222,13 +221,15 @@ class WebViewXController extends ChangeNotifier implements i.WebViewXController<
   /// Retrieves the inner page title
   @override
   Future<String?> getTitle() {
-    return Future.value(connector["document"]["title"].toString());
+    final Map<String, dynamic> connectorMap = connector as Map<String, dynamic>;
+    return Future.value(connectorMap["document"]["title"].toString());
   }
 
   /// Clears cache
   @override
   Future<void> clearCache() {
-    connector["localStorage"].callMethod("clear", []);
+    final Map<String, dynamic> connectorMap = connector as Map<String, dynamic>;
+    connectorMap["localStorage"].callMethod("clear", []);
     evalRawJavascript(
       'caches.keys().then((keyList) => Promise.all(keyList.map((key) => caches.delete(key))))',
     );

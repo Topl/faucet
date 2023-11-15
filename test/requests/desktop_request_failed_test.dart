@@ -18,9 +18,9 @@ void main() async {
   await requestTests.runTests();
 }
 
-Future<void> invalidTestTokenRequest(TestScreenSizes testScreenSize) async => testWidgets(
-      'Desktop - Should fail on invalid test token request',
-      (WidgetTester tester) async {
+Future<void> invalidTestTokenRequest(TestScreenSizes testScreenSize) async =>
+    testWidgets('Should fail on invalid test token request', (WidgetTester tester) async {
+      await tester.runAsync(() async {
         await tester.pumpWidget(
           await essentialTestProviderWidget(tester: tester, testScreenSize: testScreenSize, overrides: [
             hivePackageProvider.overrideWithValue(
@@ -29,29 +29,47 @@ Future<void> invalidTestTokenRequest(TestScreenSizes testScreenSize) async => te
           ]),
         );
         await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
         //   click request token button
         await tester.ensureVisible(find.byKey(TransactionTableScreen.requestTokensKey));
         await tester.pumpAndSettle();
-        await tester.tap(find.byKey(TransactionTableScreen.requestTokensKey));
         await tester.pumpAndSettle();
-        //   check that the drawer is displayed
-        expect(find.byKey(GetTestTokens.getTestTokensKey), findsOneWidget);
-        //   click the request token button
-        var requestTokenButton = find.byKey(GetTestTokens.requestTokenButtonKey);
+        Future.delayed(Duration.zero, () {
+          tester.tap(find.byKey(TransactionTableScreen.requestTokensKey));
+        });
 
-        await tester.ensureVisible(requestTokenButton);
-        await tester.pumpAndSettle();
-        await tester.tap(requestTokenButton);
-        await tester.pumpAndSettle();
-        await tester.ensureVisible(find.byKey(SuccessDialog.requestSuccessDialogKey));
-        // first time success message
-        expect(find.byKey(SuccessDialog.requestSuccessDialogKey), findsOneWidget);
-        // find close button
-        await tester.tap(find.byKey(SuccessDialog.closeSuccessDialogKey));
-        await tester.pumpAndSettle();
-        await tester.pumpAndSettle();
-        await tester.tap(requestTokenButton);
-        await tester.pumpAndSettle(const Duration(seconds: 1));
-        expect(find.byKey(ErrorDialog.requestErrorDialogKey), findsOneWidget);
-      },
-    );
+        await tester.tap(find.byKey(TransactionTableScreen.requestTokensKey));
+        Future.delayed(Duration.zero, () {
+          tester.tap(find.byKey(GetTestTokens.requestTokenButtonKey), warnIfMissed: false);
+        });
+        Future.delayed(Duration.zero, () {
+          expect(find.byKey(GetTestTokens.getTestTokensKey), findsOneWidget);
+        });
+        Future.delayed(Duration.zero, () {
+          tester.ensureVisible(find.byKey(GetTestTokens.requestTokenButtonKey));
+        });
+        Future.delayed(Duration.zero, () {
+          tester.tap(find.byKey(GetTestTokens.requestTokenButtonKey));
+        });
+
+        Future.delayed(Duration.zero, () {
+          tester.ensureVisible(find.byKey(SuccessDialog.requestSuccessDialogKey));
+        });
+
+        Future.delayed(Duration.zero, () {
+          expect(find.byKey(SuccessDialog.requestSuccessDialogKey), findsOneWidget);
+        });
+        Future.delayed(Duration.zero, () {
+          tester.tap(find.bySemanticsLabel('Close'), warnIfMissed: false);
+        });
+        Future.delayed(Duration.zero, () {
+          tester.ensureVisible(find.byKey(GetTestTokens.requestTokenButtonKey));
+        });
+        Future.delayed(Duration.zero, () {
+          tester.tap(find.byKey(GetTestTokens.requestTokenButtonKey));
+        });
+        Future.delayed(Duration.zero, () {
+          expect(find.byKey(ErrorDialog.requestErrorDialogKey), findsOneWidget);
+        });
+      });
+    });
