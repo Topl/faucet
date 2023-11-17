@@ -44,10 +44,8 @@ dependencies:
   flutter_svg: ^1.0.7
   freezed_annotation: ^2.4.1
   topl_common: ^2.0.2
-  brambldart:
-    git:
-      url: https://github.com/Topl/BramblDart
-      ref: 65d5675 # tetra branch
+  brambldart: ^2.0.0-alpha.2
+  servicekit: ^2.0.0-alpha.2
   json_annotation: ^4.8.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
@@ -58,6 +56,8 @@ dependencies:
   collection: ^1.17.2
   pointer_interceptor: ^0.9.3+5
   easy_web_view: ^1.6.0
+  path_provider: ^2.1.1
+  dotenv: ^4.2.0
   
 
 dev_dependencies:

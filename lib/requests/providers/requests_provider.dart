@@ -11,6 +11,7 @@ import 'package:faucet/chain/models/chains.dart';
 import 'package:faucet/requests/utils/get_mock_requests.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
+import 'package:faucet/requests/utils/make_request_transaction.dart';
 
 import '../../shared/theme.dart';
 
@@ -104,6 +105,10 @@ class RequestNotifier extends StateNotifier<AsyncValue<List<Request>>> {
       final requests = state.asData?.value ?? [];
 
       //make request using provided parameters
+
+      final transaction = await makeRequestTransaction(
+          selectedChain, requestToMake.tokensDisbursed.round(), requestToMake.walletAddress);
+
       var submittedRequest = requestToMake.copyWith(transactionId: '28EhwUBiHJ3evyGidV1WH8QMfrLF6N8UDze9Yw7jqi6w');
       requests.add(submittedRequest);
       state = AsyncData([...requests]);
