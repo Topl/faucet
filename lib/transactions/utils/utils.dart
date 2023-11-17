@@ -41,14 +41,11 @@ List<BigInt> getOutputBigInts({required List<UnspentTransactionOutput> outputs})
   List<UnspentTransactionOutput> outputLvls = outputs.where((element) {
     return element.value.hasLvl();
   }).toList();
-  print('QQQQ $outputLvls');
   try {
-    print('QQQQ return');
     return outputLvls.map((e) {
       return e.value.lvl.quantity.value.toBigInt;
     }).toList();
   } catch (e) {
-    print('QQQQ error $e');
     return [];
   }
 }

@@ -366,8 +366,6 @@ final getFirstPopulatedBlockProvider =
     final elapsedTime = currentTime.difference(startTime);
     // If the elapsed time is greater than the desired duration, break the loop
     if (elapsedTime > const Duration(seconds: 20)) {
-      print('QQQQ overtime');
-      // replace 10 with your desired duration in seconds
       throw ('Error in blockProvider: getFirstPopulatedBlockProvider took too long');
     }
 

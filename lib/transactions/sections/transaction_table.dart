@@ -169,8 +169,6 @@ class _TransactionTableScreenState extends ConsumerState<TransactionTableScreen>
               ]));
         },
         error: (error, stack) {
-          print('QQQQ $error');
-          print('QQQQ $stack');
           return const Text('Oops, something unexpected happened');
         },
         loading: () => const Center(
