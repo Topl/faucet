@@ -56,7 +56,7 @@ class GetTestTokens extends HookConsumerWidget {
     useEffect(() {
       Future.delayed(const Duration(seconds: 1), () {
         webviewController.loadContent(
-          '{$RECAPTCHA_URL}{$RECAPTCHA_TOKEN}',
+          '$RECAPTCHA_URL$RECAPTCHA_TOKEN',
           SourceType.url,
         );
       });
