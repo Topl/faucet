@@ -8,6 +8,7 @@ import 'package:faucet/shared/theme.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
@@ -43,6 +44,9 @@ class GetTestTokens extends HookConsumerWidget {
     token.value = callbackResponse.toString();
   }
 
+  final String RECAPTCHA_URL = dotenv.env["RECAPTCHA_URL"]!;
+  final String RECAPTCHA_TOKEN = dotenv.env["RECAPTCHA_TOKEN"]!;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
@@ -52,7 +56,7 @@ class GetTestTokens extends HookConsumerWidget {
     useEffect(() {
       Future.delayed(const Duration(seconds: 1), () {
         webviewController.loadContent(
-          'http://localhost:PORT/assets/webpages/index.html', //REPLACE PORT with local port
+          '{$RECAPTCHA_URL}{$RECAPTCHA_TOKEN}',
           SourceType.url,
         );
       });
