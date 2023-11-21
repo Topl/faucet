@@ -42,8 +42,8 @@ Future<void> customRunAsync(
 // Timers Pending fix
 Future<void> pendingTimersFix(WidgetTester tester) async {
   await customRunAsync(tester, test: () async {
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     await pumpTester(tester, duration: 10, loops: 100);
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
   });
 }

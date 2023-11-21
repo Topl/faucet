@@ -4,6 +4,7 @@ import 'package:faucet/requests/providers/requests_provider.dart';
 import 'package:faucet/shared/constants/network_name.dart';
 import 'package:faucet/shared/constants/status.dart';
 import 'package:faucet/shared/constants/strings.dart';
+import 'package:faucet/shared/extended-libraries/webviewx/providers/webview_provider.dart';
 import 'package:faucet/shared/theme.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
 import 'package:flutter/material.dart';
@@ -30,31 +31,38 @@ class GetTestTokens extends HookConsumerWidget {
   final toast = FToast();
 
   String? selectedNetwork = 'Valhalla';
-
   late WebViewXController webviewController;
+  bool isWebViewControllerInitialized = false;
   final initialContent = '<div></div>';
 
-  /// validate is used to validate the input field
   bool validate = false;
-
-  /// validate is used to validate the input field
-  Future<void> verifyToken(token) async {
-    final callbackResponse = await webviewController.callJsMethod('callDartCallback', []);
-    token.value = callbackResponse.toString();
-  }
+  bool isWebViewXInitialized = false;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
     final notifier = ref.watch(requestProvider.notifier);
-    final token = useState('');
+
+    final webviewLoaded = ref.read(webViewInitializedProvider.notifier);
+    final webViewInitialized = ref.watch(webViewInitializedProvider);
+    final token = ref.watch(tokenProvider.notifier);
+
+    Future<void> verifyToken(token) async {
+      final callbackResponse = await webviewController.callJsMethod('callDartCallback', []);
+      token.setToken(callbackResponse.toString());
+    }
 
     useEffect(() {
-      Future.delayed(const Duration(seconds: 1), () {
-        webviewController.loadContent(
-          'http://localhost:PORT/assets/webpages/index.html', //REPLACE PORT with local port
-          SourceType.url,
-        );
+      Future.delayed(const Duration(seconds: 5), () async {
+        try {
+          await webviewController.loadContent(
+            'http://localhost:PORT/assets/webpages/index.html',
+            SourceType.url,
+          );
+          webviewLoaded.state = true;
+        } catch (e) {
+          print("WebViewX initialization failed: $e");
+        }
       });
       return null;
     }, []);
@@ -208,15 +216,16 @@ class GetTestTokens extends HookConsumerWidget {
               SizedBox(
                 height: !isMobile ? 30 : null,
               ),
-              WebViewX(
-                key: recaptchaWidgetKey,
-                initialContent: initialContent,
-                initialSourceType: SourceType.html,
-                height: isMobile ? 110 : 220,
-                width: isMobile ? 200 : 400,
-                onWebViewCreated: (controller) => webviewController = controller,
-                dartCallBacks: const {},
-              ),
+              if (webViewInitialized)
+                WebViewX(
+                  key: recaptchaWidgetKey,
+                  initialContent: initialContent,
+                  initialSourceType: SourceType.html,
+                  height: isMobile ? 110 : 220,
+                  width: isMobile ? 200 : 440,
+                  onWebViewCreated: (controller) => webviewController = controller,
+                  dartCallBacks: const {},
+                )
             ]),
             Padding(
               padding: const EdgeInsets.only(top: 64.0),
@@ -249,7 +258,7 @@ class GetTestTokens extends HookConsumerWidget {
                         key: requestTokenButtonKey,
                         onPressed: () async {
                           await verifyToken(token);
-                          if (token.value.isEmpty) {
+                          if (token.state.isEmpty) {
                             // ignore: use_build_context_synchronously
                             errorDialogBuilder(context, 'Please verify reCaptcha');
                           } else {
@@ -285,7 +294,7 @@ class GetTestTokens extends HookConsumerWidget {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

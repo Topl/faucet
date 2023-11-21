@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../essential_test_provider_widget.dart';
 import '../required_test_class.dart';
+import '../utils/tester_utils.dart';
 import 'utils/mock_request_hive_utils.dart';
 
 class DesktopRequestSuccessTokensTest extends RequiredTest {
@@ -31,34 +32,24 @@ void main() async {
 
 Future<void> requestTokenTest(TestScreenSizes testScreenSize) async =>
     testWidgets('Should confirm that tokens are requested ${testScreenSize.name}', (WidgetTester tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(
-          await essentialTestProviderWidget(
-            tester: tester,
-            testScreenSize: testScreenSize,
-            overrides: [hivePackageProvider.overrideWithValue(getMockRequestHive().mockHive)],
-          ),
-        );
-        await tester.pumpAndSettle();
-        await tester.pumpAndSettle();
-        Future.delayed(Duration.zero, () {
-          tester.ensureVisible(find.byKey(TransactionTableScreen.requestTokensKey));
-        });
+      await tester.pumpWidget(
+        await essentialTestProviderWidget(
+          tester: tester,
+          testScreenSize: testScreenSize,
+          overrides: [hivePackageProvider.overrideWithValue(getMockRequestHive().mockHive)],
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byKey(TransactionTableScreen.requestTokensKey));
+      await tester.pumpAndSettle();
 
-        await tester.pumpAndSettle();
-        await tester.tap(find.byKey(TransactionTableScreen.requestTokensKey), warnIfMissed: false);
-
-        Future.delayed(Duration.zero, () {
-          tester.tap(find.byKey(TransactionTableScreen.requestTokensKey), warnIfMissed: false);
-        });
-        await tester.tap(find.byKey(TransactionTableScreen.requestTokensKey), warnIfMissed: false);
-
-        Future.delayed(Duration.zero, () {
-          expect(find.byKey(GetTestTokens.getTestTokensKey), findsOneWidget);
-        });
-
-        Future.delayed(Duration.zero, () async {
-          await tester.tap(find.byKey(GetTestTokens.requestTokenButtonKey), warnIfMissed: false);
-        });
+      await customRunAsync(tester, test: () async {
+        await tester.tap(find.byKey(TransactionTableScreen.requestTokensKey));
       });
+      await customRunAsync(tester, test: () async {
+        expect(find.byKey(GetTestTokens.getTestTokensKey), findsOneWidget);
+      });
+      await tester.ensureVisible(find.byKey(GetTestTokens.requestTokenButtonKey));
+
+      await tester.tap(find.byKey(GetTestTokens.requestTokenButtonKey), warnIfMissed: false);
     });
