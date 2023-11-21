@@ -1,27 +1,27 @@
 <html lang="en">
 <head>
     <script>
-        /// returns the response from the captcha
         function callDartCallback(message) {
             return grecaptcha.getResponse();
         };
-        /// resets the captcha
+
         function recaptchaExpiredCallback() {
             grecaptcha.reset();
         };
-        /// renders the captcha
-        var captchaCallBack = function () {
-            grecaptcha.render('html_element', {
-                'sitekey': '6LecGzwoAAAAAD5_B-a0Zr7YvL_UVpPCyGXfHCuy', // FOR LOCAL TESTING ONLY
-                'callback': function () {
-                    var response = grecaptcha.getResponse();
-                },
-                'expired-callback': recaptchaExpiredCallback,
-            });
-        };
+
+        function renderCaptcha() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const siteKey = urlParams.get('token');
+                grecaptcha.render('html_element', {
+                    'sitekey': siteKey,
+                    'callback': function () {
+                        var response = grecaptcha.getResponse();
+                    },
+                    'expired-callback': recaptchaExpiredCallback,
+                });
+            };
     </script>
-    <script src="https://www.google.com/recaptcha/api.js?onload=captchaCallBack&render=explicit" async defer>
-    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=renderCaptcha&render=explicit" async defer></script>
 </head>
 <body>
     <div id="html_element"></div>
