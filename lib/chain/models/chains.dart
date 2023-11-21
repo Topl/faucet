@@ -16,9 +16,9 @@ sealed class Chains with _$Chains {
     @Default('toplnetKey') String key,
   }) = ToplMainnet;
   const factory Chains.valhalla_testnet({
-    @Default('Valhalla') String networkName,
-    @Default('testnet.topl.network') String hostUrl,
-    @Default(50051) int port,
+    @Default('Testnet') String networkName,
+    @Default('testnet.topl.co') String hostUrl,
+    @Default(443) int port,
     @Default('valhallaKey') String key,
   }) = ValhallaTestNet;
   const factory Chains.private_network({
