@@ -1,4 +1,3 @@
-import 'package:easy_web_view/easy_web_view.dart';
 import 'package:faucet/shared/extended-libraries/webviewx/src/controller/interface.dart';
 import 'package:faucet/shared/extended-libraries/webviewx/src/utils/source_type.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

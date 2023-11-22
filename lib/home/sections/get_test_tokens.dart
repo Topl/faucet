@@ -9,14 +9,12 @@ import 'package:faucet/shared/theme.dart';
 import 'package:faucet/shared/utils/theme_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:faucet/shared/extended-libraries/webviewx/src/utils/source_type.dart';
-import 'package:faucet/shared/extended-libraries/webviewx/src/utils/utils.dart';
-import 'package:faucet/shared/extended-libraries/webviewx/src/view/impl/web.dart';
 import 'package:faucet/shared/extended-libraries/webviewx/src/controller/controller.dart';
+
+import 'custom_webview.dart';
 
 class GetTestTokens extends HookConsumerWidget {
   static const getTestTokensKey = Key('getTestTokensKey');
@@ -43,7 +41,6 @@ class GetTestTokens extends HookConsumerWidget {
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
     final notifier = ref.watch(requestProvider.notifier);
 
-    final webviewLoaded = ref.read(webViewInitializedProvider.notifier);
     final webViewInitialized = ref.watch(webViewInitializedProvider);
     final token = ref.watch(tokenProvider.notifier);
 
@@ -51,21 +48,6 @@ class GetTestTokens extends HookConsumerWidget {
       final callbackResponse = await webviewController.callJsMethod('callDartCallback', []);
       token.setToken(callbackResponse.toString());
     }
-
-    useEffect(() {
-      Future.delayed(const Duration(seconds: 5), () async {
-        try {
-          await webviewController.loadContent(
-            'http://localhost:PORT/assets/webpages/index.html',
-            SourceType.url,
-          );
-          webviewLoaded.state = true;
-        } catch (e) {
-          print("WebViewX initialization failed: $e");
-        }
-      });
-      return null;
-    }, []);
 
     return SingleChildScrollView(
       child: Padding(
@@ -217,16 +199,7 @@ class GetTestTokens extends HookConsumerWidget {
                 SizedBox(
                   height: !isMobile ? 30 : null,
                 ),
-                if (webViewInitialized)
-                  WebViewX(
-                    key: recaptchaWidgetKey,
-                    initialContent: initialContent,
-                    initialSourceType: SourceType.html,
-                    height: isMobile ? 110 : 220,
-                    width: isMobile ? 200 : 440,
-                    onWebViewCreated: (controller) => webviewController = controller,
-                    dartCallBacks: const {},
-                  )
+                if (webViewInitialized) const CustomWebview(),
               ],
             ),
             Padding(

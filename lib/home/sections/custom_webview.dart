@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
-class TestQQQQ extends HookConsumerWidget {
+class CustomWebview extends HookConsumerWidget {
   static const recaptchaWidgetKey = Key('recaptcha-widget');
-  const TestQQQQ({Key? key}) : super(key: key);
+  const CustomWebview({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
