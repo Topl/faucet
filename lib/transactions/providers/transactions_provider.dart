@@ -89,7 +89,7 @@ class TransactionsNotifier extends StateNotifier<AsyncValue<List<Transaction>>> 
   final Ref ref;
   final Chains selectedChain;
   TransactionsNotifier(this.ref, this.selectedChain) : super(const AsyncLoading()) {
-    getTransactions(setState: true);
+    getTransactions();
   }
 
   /// Gets a transaction from genus and adds it to state
@@ -163,67 +163,68 @@ class TransactionsNotifier extends StateNotifier<AsyncValue<List<Transaction>>> 
   ///
   /// If [setState] is true, it will update the state of the provider
   /// If [setState] is false, it will not update the state of the provider
-  Future<List<Transaction>> getTransactions({
-    bool setState = false,
-  }) async {
+  Future<void> getTransactions() async {
     if (selectedChain == const Chains.mock()) {
       final transactions = List.generate(100, (index) => getMockTransaction());
-      if (setState) state = AsyncData(transactions);
-      return transactions;
+      state = AsyncData(transactions);
     } else {
-      if (setState) state = const AsyncLoading();
+      state = const AsyncLoading();
       final List<Transaction> transactions = [];
       //get first populated block
-
-      var latestBlockRes = await ref.read(getFirstPopulatedBlockProvider(selectedChain).future);
-
-      final config = ref.read(configProvider.future);
-      final presentConfig = await config;
-
-      int transactionCount = latestBlockRes.block.fullBody.transactions.length;
-
-      var latestBlock = Block(
-        header: decodeId(latestBlockRes.block.header.headerId.value),
-        epoch: latestBlockRes.block.header.slot.toInt() ~/ presentConfig.config.epochLength.toInt(),
-        size: latestBlockRes.writeToBuffer().lengthInBytes.toDouble(),
-        height: latestBlockRes.block.header.height.toInt(),
-        slot: latestBlockRes.block.header.slot.toInt(),
-        timestamp: latestBlockRes.block.header.timestamp.toInt(),
-        transactionNumber: transactionCount,
-      );
-
-      //continue going through transactions
-      for (int i = 0; i < transactionCount; i++) {
-        //calculate transaction amount
-        var outputList = latestBlockRes.block.fullBody.transactions[i].outputs.toList();
-        var inputList = latestBlockRes.block.fullBody.transactions[i].inputs.toList();
-        var txAmount = calculateAmount(outputs: outputList);
-        var txFees = calculateFees(inputs: inputList, outputs: outputList);
-
-        transactions.add(
-          Transaction(
-            transactionId: decodeId(latestBlockRes.block.fullBody.transactions[i].transactionId.value),
-            status: TransactionStatus.pending,
-            block: latestBlock,
-            broadcastTimestamp: latestBlock.timestamp,
-            confirmedTimestamp: 0, //for the latest block, it will never be confirmed (confirmation depth is 5)
-            transactionType: TransactionType.transfer,
-            amount: txAmount.toDouble(),
-            quantity: txAmount.toDouble(),
-            transactionFee: txFees.toDouble(),
-            senderAddress:
-                latestBlockRes.block.fullBody.transactions[i].inputs.map((e) => decodeId(e.address.id.value)).toList(),
-            receiverAddress:
-                latestBlockRes.block.fullBody.transactions[i].outputs.map((e) => decodeId(e.address.id.value)).toList(),
-            transactionSize: latestBlockRes.block.fullBody.transactions[i].writeToBuffer().lengthInBytes.toDouble(),
-            name: latestBlockRes.block.fullBody.transactions[i].inputs[0].value.hasLvl() ? 'Lvl' : 'Topl',
-          ),
+      try {
+        var latestBlockRes = await ref.read(getFirstPopulatedBlockProvider(selectedChain).future);
+        final config = ref.read(configProvider.future);
+        final presentConfig = await config;
+        int transactionCount = latestBlockRes.block.fullBody.transactions.length;
+        var latestBlock = Block(
+          header: decodeId(latestBlockRes.block.header.headerId.value),
+          epoch: latestBlockRes.block.header.slot.toInt() ~/ presentConfig.config.epochLength.toInt(),
+          size: latestBlockRes.writeToBuffer().lengthInBytes.toDouble(),
+          height: latestBlockRes.block.header.height.toInt(),
+          slot: latestBlockRes.block.header.slot.toInt(),
+          timestamp: latestBlockRes.block.header.timestamp.toInt(),
+          transactionNumber: transactionCount,
         );
-      }
-      if (setState) {
+        //continue going through transactions
+        for (int i = 0; i < transactionCount; i++) {
+          //calculate transaction amount
+          var outputList = latestBlockRes.block.fullBody.transactions[i].outputs.toList();
+          var inputList = latestBlockRes.block.fullBody.transactions[i].inputs.toList();
+          var txAmount = calculateAmount(outputs: outputList);
+          var txFees = calculateFees(inputs: inputList, outputs: outputList);
+
+          final name = latestBlockRes.block.fullBody.transactions[i].inputs.isNotEmpty &&
+                  latestBlockRes.block.fullBody.transactions[i].inputs[0].value.hasLvl()
+              ? 'Lvl'
+              : 'Topl';
+
+          transactions.add(
+            Transaction(
+              transactionId: decodeId(latestBlockRes.block.fullBody.transactions[i].transactionId.value),
+              status: TransactionStatus.pending,
+              block: latestBlock,
+              broadcastTimestamp: latestBlock.timestamp,
+              confirmedTimestamp: 0, //for the latest block, it will never be confirmed (confirmation depth is 5)
+              transactionType: TransactionType.transfer,
+              amount: txAmount.toDouble(),
+              quantity: txAmount.toDouble(),
+              transactionFee: txFees.toDouble(),
+              senderAddress: latestBlockRes.block.fullBody.transactions[i].inputs
+                  .map((e) => decodeId(e.address.id.value))
+                  .toList(),
+              receiverAddress: latestBlockRes.block.fullBody.transactions[i].outputs
+                  .map((e) => decodeId(e.address.id.value))
+                  .toList(),
+              transactionSize: latestBlockRes.block.fullBody.transactions[i].writeToBuffer().lengthInBytes.toDouble(),
+              name: name,
+            ),
+          );
+        }
+
         state = AsyncData(transactions);
+      } catch (e) {
+        state = AsyncError(e, StackTrace.current);
       }
-      return transactions;
     }
   }
 
