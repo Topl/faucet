@@ -201,32 +201,34 @@ class GetTestTokens extends HookConsumerWidget {
             const SizedBox(
               height: 8,
             ),
-            Stack(children: [
-              SizedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      validate ? "This field is required" : '',
-                      style: titleSmall(context),
-                    ),
-                  ],
+            Stack(
+              children: [
+                SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        validate ? "This field is required" : '',
+                        style: titleSmall(context),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: !isMobile ? 30 : null,
-              ),
-              if (webViewInitialized)
-                WebViewX(
-                  key: recaptchaWidgetKey,
-                  initialContent: initialContent,
-                  initialSourceType: SourceType.html,
-                  height: isMobile ? 110 : 220,
-                  width: isMobile ? 200 : 440,
-                  onWebViewCreated: (controller) => webviewController = controller,
-                  dartCallBacks: const {},
-                )
-            ]),
+                SizedBox(
+                  height: !isMobile ? 30 : null,
+                ),
+                if (webViewInitialized)
+                  WebViewX(
+                    key: recaptchaWidgetKey,
+                    initialContent: initialContent,
+                    initialSourceType: SourceType.html,
+                    height: isMobile ? 110 : 220,
+                    width: isMobile ? 200 : 440,
+                    onWebViewCreated: (controller) => webviewController = controller,
+                    dartCallBacks: const {},
+                  )
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 64.0),
               child: Row(
