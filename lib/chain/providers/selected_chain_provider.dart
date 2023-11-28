@@ -40,7 +40,7 @@ class ChainsNotifier extends StateNotifier<AsyncValue<List<Chains>>> {
     // dev notes: This will have to be updated when we change the predetermined networks
     final List<Chains> standardChains = [
       const Chains.topl_mainnet(),
-      const Chains.valhalla_testnet(),
+      const Chains.testnet(),
       const Chains.private_network(),
       const Chains.dev_network(),
       const Chains.mock(),
@@ -60,7 +60,7 @@ class ChainsNotifier extends StateNotifier<AsyncValue<List<Chains>>> {
     switch (Chains) {
       case Chains.topl_mainnet:
         break;
-      case Chains.valhalla_testnet:
+      case Chains.testnet:
         break;
       case Chains.private_network:
         break;

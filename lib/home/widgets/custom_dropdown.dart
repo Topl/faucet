@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 List<String> networks = [
-  'Valhalla',
+  'TestNet',
   'Topl Testnet',
 ];
 
@@ -16,7 +16,7 @@ class CustomTestNetwork extends HookConsumerWidget {
   // create const constructor
   CustomTestNetwork({Key? key}) : super(key: key);
   bool isCDropDownOpen = false;
-  String? selectedNetwork = 'Valhalla';
+  String? selectedNetwork = 'TestNet';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
