@@ -3,7 +3,6 @@ import 'package:faucet/shared/constants/ui.dart';
 import 'package:faucet/shared/providers/app_theme_provider.dart';
 import 'package:faucet/shared/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vrouter/vrouter.dart';
@@ -11,7 +10,6 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 void main() async {
   await Hive.initFlutter();
-  await dotenv.load(fileName: '.env');
 
   runApp(
     const ProviderScope(

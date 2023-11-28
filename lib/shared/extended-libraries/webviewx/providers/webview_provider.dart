@@ -1,6 +1,5 @@
 import 'package:faucet/shared/extended-libraries/webviewx/src/controller/interface.dart';
 import 'package:faucet/shared/extended-libraries/webviewx/src/utils/source_type.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final webViewProvider = StateNotifierProvider<WebViewNotifier, AsyncValue<WebViewXController<dynamic>>>((ref) {
@@ -14,8 +13,8 @@ class WebViewNotifier extends StateNotifier<AsyncValue<WebViewXController<dynami
     state = AsyncData(controller);
   }
 
-  final String RECAPTCHA_URL = dotenv.env["RECAPTCHA_URL"]!;
-  final String RECAPTCHA_TOKEN = dotenv.env["RECAPTCHA_TOKEN"]!;
+  final String RECAPTCHA_URL = const String.fromEnvironment('RECAPTCHA_URL', defaultValue: 'RECAPTCHA_URL');
+  final String RECAPTCHA_TOKEN = const String.fromEnvironment('RECAPTCHA_TOKEN', defaultValue: 'RECAPTCHA_TOKEN');
 
   loadContent(WebViewXController<dynamic> controller) async {
     await controller.loadContent(
