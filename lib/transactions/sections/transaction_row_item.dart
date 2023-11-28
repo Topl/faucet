@@ -133,7 +133,7 @@ class RowDataSource extends DataTableSource {
         )),
         const DataCell(TransactionColumnText(
           isTransactionTable: true,
-          textTop: 'Valhalla',
+          textTop: 'TestNet',
           textBottom: '',
           isBottomTextRequired: false,
         )),
