@@ -2,6 +2,7 @@ import 'package:faucet/chain/models/chains.dart';
 import 'package:faucet/chain/utils/chain_utils.dart';
 import 'package:faucet/shared/services/hive/hive_service.dart';
 import 'package:faucet/shared/services/hive/hives.dart';
+import 'package:faucet/shared/utils/get_dev_mode.dart';
 import 'package:faucet/shared/utils/hive_utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -37,13 +38,12 @@ class ChainsNotifier extends StateNotifier<AsyncValue<List<Chains>>> {
       }
     });
 
+    final List<Chains> devChains = [const Chains.private_network(), const Chains.dev_network(), const Chains.mock()];
     // dev notes: This will have to be updated when we change the predetermined networks
     final List<Chains> standardChains = [
       const Chains.topl_mainnet(),
       const Chains.valhalla_testnet(),
-      const Chains.private_network(),
-      const Chains.dev_network(),
-      const Chains.mock(),
+      if (getDevMode()) ...devChains
     ];
 
     //state holds both standard and custom chains

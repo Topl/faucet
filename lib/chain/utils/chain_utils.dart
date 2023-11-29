@@ -1,6 +1,5 @@
 import 'package:faucet/chain/models/chain.dart';
-import 'package:flutter/foundation.dart';
-
+import 'package:faucet/shared/utils/get_dev_mode.dart';
 import '../models/chains.dart';
 
 Chain getMockChain() {
@@ -22,5 +21,5 @@ Chain getMockChain() {
 }
 
 Chains getDefaultChain() {
-  return kDebugMode ? const Chains.dev_network() : const Chains.topl_mainnet();
+  return getDevMode() ? const Chains.dev_network() : const Chains.topl_mainnet();
 }
