@@ -108,4 +108,4 @@ web_build_and_host:
 
 file_test:
 	@reset
-	@flutter test test/
+	@flutter test test/chain/network_drodown/mobile_network_dropdown_tests.dart
