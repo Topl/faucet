@@ -28,7 +28,8 @@ class GetTestTokens extends HookConsumerWidget {
   final ThemeMode colorTheme;
   final toast = FToast();
 
-  String? selectedNetwork = 'Valhalla';
+  String? selectedNetwork = 'Testnet';
+
   late WebViewXController webviewController;
   bool isWebViewControllerInitialized = false;
   final initialContent = '<div></div>';
