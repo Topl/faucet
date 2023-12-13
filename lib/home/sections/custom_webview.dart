@@ -11,7 +11,7 @@ class CustomWebview extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initialContent = '<div></div>';
+    const initialContent = '<div></div>';
     final isMobile = ResponsiveBreakpoints.of(context).equals(MOBILE);
 
     final webView = ref.watch(webViewProvider);

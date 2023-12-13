@@ -13,9 +13,12 @@ class WebViewNotifier extends StateNotifier<AsyncValue<WebViewXController<dynami
     state = AsyncData(controller);
   }
 
+  final String RECAPTCHA_URL = const String.fromEnvironment('RECAPTCHA_URL', defaultValue: 'RECAPTCHA_URL');
+  final String RECAPTCHA_TOKEN = const String.fromEnvironment('RECAPTCHA_TOKEN', defaultValue: 'RECAPTCHA_TOKEN');
+
   loadContent(WebViewXController<dynamic> controller) async {
     await controller.loadContent(
-      'http://localhost:PORT/assets/webpages/index.html',
+      '{$RECAPTCHA_URL}{$RECAPTCHA_TOKEN}',
       SourceType.url,
     );
   }
